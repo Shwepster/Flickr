@@ -20,5 +20,5 @@ final class AppServices {
         )
     }()
     
-    private(set) lazy var photoService: PhotoService = PhotoService(flickrService: flickrService)
+    private(set) lazy var photoService: PhotoService = PhotoServiceRaw(flickrService: flickrService)
 }

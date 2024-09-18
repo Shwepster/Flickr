@@ -25,17 +25,22 @@ func testApi() async {
             page: 1,
             perPage: AppSettings.photosPerPage
         )
-                
+        
+        let service = PhotoServiceCropped(
+            cropSize: .init(width: 128, height: 128),
+            photoService: AppServices.shared.photoService
+        )
+        
         await withTaskGroup(of: Void.self, body: { group in
             for photo in result.photo[..<10] {
                 group.addTask {
-                    let image = await AppServices.shared.photoService.loadImage(for: photo)
+                    let image = await service.loadImage(for: photo)
                     print(image?.size)
                 }
             }
             
             for photo in result.photo[..<10] {
-                AppServices.shared.photoService.cancelPhotoLoading(for: photo)
+                service.cancelPhotoLoading(for: photo)
             }
         })
     } catch {

@@ -17,9 +17,7 @@ final class HTTPClient {
     
     // MARK: - Public
     
-    func request(_ url: URLRequest) async throws -> Data {
-        try Task.checkCancellation()
-        
+    func request(_ url: URLRequest) async throws -> Data {        
         let (data, response) = try await session.data(for: url)
         
         try Task.checkCancellation()
