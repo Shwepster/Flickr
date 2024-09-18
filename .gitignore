@@ -1,0 +1,29 @@
+# Xcode
+.DS_Store
+*.xcuserstate
+*.xcworkspace
+xcuserdata/
+*.xcuserdatad/
+*.moved-aside
+*.swp
+*.swo
+*.lock
+*.log
+DerivedData/
+build/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcactivitylog
+*.xcdebugger
+*.xcuserstate
+
+# Swift Package Manager
+.build/
+Packages/
+*.swiftpm/
+
+# CocoaPods
+Pods/
+Podfile.lock

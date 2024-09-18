@@ -11,7 +11,13 @@ import SwiftUI
 struct FlickrApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().task {
+                if let apiKey = ProcessInfo.processInfo.environment["KEY"] {
+                    print("Flickr API Key: \(apiKey)")
+                } else {
+                    print("API key not found. Set it in environment variable KEY")
+                }
+            }
         }
     }
 }
