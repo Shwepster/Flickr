@@ -16,7 +16,9 @@ final class AppServices {
         
         return FlickrService(
             httpClient: HTTPClient(),
-            requestBuilder: FlickrRequestBuilder(key: "key")
+            requestBuilder: FlickrRequestBuilder(key: key)
         )
     }()
+    
+    private(set) lazy var photoService: PhotoService = PhotoService(flickrService: flickrService)
 }

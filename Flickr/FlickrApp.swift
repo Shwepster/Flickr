@@ -25,14 +25,19 @@ func testApi() async {
             page: 1,
             perPage: AppSettings.photosPerPage
         )
-        
-        let imageData = try await AppServices.shared.flickrService.loadImage(
-            for: result.photo[0],
-            size: AppSettings.photoSize
-        )
-        
-        let image = UIImage(data: imageData)
-        print(image)
+                
+        await withTaskGroup(of: Void.self, body: { group in
+            for photo in result.photo[..<10] {
+                group.addTask {
+                    let image = await AppServices.shared.photoService.loadImage(for: photo)
+                    print(image?.size)
+                }
+            }
+            
+            for photo in result.photo[..<10] {
+                AppServices.shared.photoService.cancelPhotoLoading(for: photo)
+            }
+        })
     } catch {
         print(error)
     }

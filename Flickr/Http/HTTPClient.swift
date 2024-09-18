@@ -18,8 +18,12 @@ final class HTTPClient {
     // MARK: - Public
     
     func request(_ url: URLRequest) async throws -> Data {
+        try Task.checkCancellation()
+        
         let (data, response) = try await session.data(for: url)
         
+        try Task.checkCancellation()
+
         guard let response = response as? HTTPURLResponse else {
             throw HTTPError.unexpectedResponseType
         }
