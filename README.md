@@ -8,5 +8,6 @@ Features:
   - Ability for user to save selected image
   - List of saved images, with single column
   - Display errors on the background if list is empty, otherwise in footer
+  - Maximize UnitTest coverege
 
 https://www.flickr.com/services/api/
