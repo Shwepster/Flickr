@@ -12,12 +12,28 @@ struct FlickrApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView().task {
-                if let apiKey = ProcessInfo.processInfo.environment["KEY"] {
-                    print("Flickr API Key: \(apiKey)")
-                } else {
-                    print("API key not found. Set it in environment variable KEY")
-                }
+                await testApi()
             }
         }
+    }
+}
+
+func testApi() async {
+    do {
+        let result = try await AppServices.shared.flickrService.search(
+            for: "cat",
+            page: 1,
+            perPage: AppSettings.photosPerPage
+        )
+        
+        let imageData = try await AppServices.shared.flickrService.loadImage(
+            for: result.photo[0],
+            size: AppSettings.photoSize
+        )
+        
+        let image = UIImage(data: imageData)
+        print(image)
+    } catch {
+        print(error)
     }
 }
