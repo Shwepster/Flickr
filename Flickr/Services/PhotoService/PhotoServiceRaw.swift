@@ -1,5 +1,5 @@
 //
-//  PhotoService.swift
+//  PhotoServiceRaw.swift
 //  Flickr
 //
 //  Created by Maxim Vynnyk on 19.09.2024.
@@ -8,7 +8,7 @@
 import UIKit
 import Synchronization
 
-final class PhotoService {
+final class PhotoServiceRaw: PhotoService {
     private let flickrService: FlickrService
     private var imageSize: PhotoSize { AppSettings.photoSize }
     private let loadingTasks: Mutex<[String: Task<UIImage?, Never>]> = .init([:])
