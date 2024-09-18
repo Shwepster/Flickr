@@ -37,6 +37,8 @@ final class FlickrService {
     }
     
     func loadImage(for photo: PhotoDTO, size: PhotoSize) async throws -> Data {
+        try Task.checkCancellation()
+        
         let data = try await httpClient.request(
             requestBuilder.image(
                 id: photo.id,
@@ -46,6 +48,7 @@ final class FlickrService {
             )
         )
         
+        try Task.checkCancellation()
         return data
     }
     
