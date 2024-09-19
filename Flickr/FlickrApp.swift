@@ -33,7 +33,7 @@ func testApi() async {
         await withTaskGroup(of: Void.self) { group in
             for photo in result.photo + result.photo + result.photo {
                 group.addTask {
-                    let image = await service.loadImage(for: photo)
+                    let image = await service.loadImage(for: photo, size: AppSettings.photoSize)
                     print("image: \(photo.id) - \(image?.size)")
                 }
             }

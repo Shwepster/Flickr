@@ -16,7 +16,7 @@ final class PhotoServiceSynchronized: PhotoService {
         self.photoService = photoService
     }
     
-    func loadImage(for photo: PhotoDTO) async -> UIImage? {
+    func loadImage(for photo: PhotoDTO, size: PhotoSize) async -> UIImage? {
         if let task = loadingTasks.withLock({ $0[photo.id] }) {
             return await task.value
         }
@@ -25,7 +25,7 @@ final class PhotoServiceSynchronized: PhotoService {
                
         let task = Task<UIImage?, Never> {
             if Task.isCancelled { return nil }
-            let image = await photoService.loadImage(for: photo)
+            let image = await photoService.loadImage(for: photo, size: size)
             if Task.isCancelled { return nil }
             return image
         }

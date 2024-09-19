@@ -16,8 +16,8 @@ struct PhotoServiceCropped: PhotoService {
         self.photoService = photoService
     }
     
-    func loadImage(for photo: PhotoDTO) async -> UIImage? {
-        let image = await photoService.loadImage(for: photo)
+    func loadImage(for photo: PhotoDTO, size: PhotoSize) async -> UIImage? {
+        let image = await photoService.loadImage(for: photo, size: size)
         
         if Task.isCancelled { return nil }
         
