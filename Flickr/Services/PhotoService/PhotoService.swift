@@ -8,6 +8,6 @@
 import UIKit
 
 protocol PhotoService {
-    func loadImage(for photo: PhotoDTO) async -> UIImage?
+    func loadImage(for photo: PhotoDTO, size: PhotoSize) async -> UIImage?
     func cancelPhotoLoading(for photo: PhotoDTO)
 }

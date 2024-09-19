@@ -16,13 +16,15 @@ struct PhotoServiceCached: PhotoService {
         self.cacheService = cacheService
     }
     
-    func loadImage(for photo: PhotoDTO) async -> UIImage? {
+    func loadImage(for photo: PhotoDTO, size: PhotoSize) async -> UIImage? {
         if let image = await cacheService.getImage(for: photo.id) {
             print("Used cached image for \(photo.id).")
             return image
         }
         
-        guard let image = await photoService.loadImage(for: photo) else { return nil }
+        guard let image = await photoService.loadImage(for: photo, size: size) else {
+            return nil
+        }
         
         if !Task.isCancelled {
             await cacheService.cache(image: image, for: photo.id)

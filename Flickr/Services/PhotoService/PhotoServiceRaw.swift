@@ -9,15 +9,14 @@ import UIKit
 
 struct PhotoServiceRaw: PhotoService {
     private let flickrService: FlickrService
-    private var imageSize: PhotoSize { AppSettings.photoSize }
     
     init(flickrService: FlickrService) {
         self.flickrService = flickrService
     }
     
-    func loadImage(for photo: PhotoDTO) async -> UIImage? {
+    func loadImage(for photo: PhotoDTO, size: PhotoSize) async -> UIImage? {
         do {
-            let imageData = try await flickrService.loadImage(for: photo, size: imageSize)
+            let imageData = try await flickrService.loadImage(for: photo, size: size)
             return UIImage(data: imageData)
         } catch {
             print("Error loading photo: \(error)")
