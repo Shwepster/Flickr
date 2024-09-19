@@ -16,9 +16,12 @@ struct PhotoServiceCached: PhotoService {
         self.cacheService = cacheService
     }
     
+    // MARK: - Public
+    
     func loadImage(for photo: PhotoDTO, size: PhotoSize) async -> UIImage? {
-        if let image = await cacheService.getImage(for: photo.id) {
-            print("Used cached image for \(photo.id).")
+        let photoId = id(for: photo, size: size)
+        
+        if let image = await cacheService.getImage(for: photoId) {
             return image
         }
         
@@ -27,7 +30,7 @@ struct PhotoServiceCached: PhotoService {
         }
         
         if !Task.isCancelled {
-            await cacheService.cache(image: image, for: photo.id)
+            await cacheService.cache(image: image, for: photoId)
         }
         
         return image
@@ -35,5 +38,11 @@ struct PhotoServiceCached: PhotoService {
     
     func cancelPhotoLoading(for photo: PhotoDTO) {
         photoService.cancelPhotoLoading(for: photo)
+    }
+    
+    // MARK: - Private
+    
+    private func id(for photo: PhotoDTO, size: PhotoSize) -> String {
+        "\(photo.id)_\(size.rawValue)"
     }
 }
