@@ -9,6 +9,7 @@ import UIKit
 
 actor ImageCacheService {
     private let fileManager: FileManager = .default
+    private let imageExtension = "jpg"
     
     func cache(image: UIImage, for id: String) {
         guard let cacheDirectory = fileManager.urls(
@@ -16,7 +17,7 @@ actor ImageCacheService {
             in: .userDomainMask
         ).first, let data = image.heicData() else { return }
         
-        let fileURL = cacheDirectory.appendingPathComponent("\(id).jpg")
+        let fileURL = cacheDirectory.appendingPathComponent("\(id).\(imageExtension)")
         
         do {
             try data.write(to: fileURL)
@@ -28,7 +29,7 @@ actor ImageCacheService {
     
     func getImage(for id: String) -> UIImage? {
         let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let cacheFileURL = cacheDirectory.appendingPathComponent("\(id).jpg")
+        let cacheFileURL = cacheDirectory.appendingPathComponent("\(id).\(imageExtension)")
         
         guard fileManager.fileExists(atPath: cacheFileURL.path) else { return nil }
         return UIImage(contentsOfFile: cacheFileURL.path)
@@ -46,7 +47,7 @@ actor ImageCacheService {
                 includingPropertiesForKeys: nil
             )
             
-            for fileURL in fileURLs where fileURL.pathExtension == "jpg" {
+            for fileURL in fileURLs where fileURL.pathExtension == imageExtension {
                 try fileManager.removeItem(at: fileURL)
             }
         } catch {
