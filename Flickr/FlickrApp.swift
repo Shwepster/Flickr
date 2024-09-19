@@ -12,7 +12,9 @@ struct FlickrApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView().task {
-                await testApi()
+                Task(priority: .high) {
+                    await testApi()
+                }
             }
         }
     }
@@ -26,23 +28,20 @@ func testApi() async {
             perPage: AppSettings.photosPerPage
         )
         
-        let service = PhotoServiceCropped(
-            cropSize: .init(width: 128, height: 128),
-            photoService: AppServices.shared.photoService
-        )
+        let service = AppServices.shared.photoService
         
-        await withTaskGroup(of: Void.self, body: { group in
-            for photo in result.photo[..<10] {
+        await withTaskGroup(of: Void.self) { group in
+            for photo in result.photo + result.photo + result.photo {
                 group.addTask {
                     let image = await service.loadImage(for: photo)
-                    print(image?.size)
+                    print("image: \(photo.id) - \(image?.size)")
                 }
             }
             
-            for photo in result.photo[..<10] {
+            for photo in result.photo {
                 service.cancelPhotoLoading(for: photo)
             }
-        })
+        } 
     } catch {
         print(error)
     }

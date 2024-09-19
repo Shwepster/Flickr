@@ -20,5 +20,13 @@ final class AppServices {
         )
     }()
     
-    private(set) lazy var photoService: PhotoService = PhotoServiceRaw(flickrService: flickrService)
+    private(set) lazy var photoService: PhotoService = {
+        var service: PhotoService = PhotoServiceRaw(flickrService: flickrService)
+        service = PhotoServiceCropped(cropSize: AppSettings.photoSize.cgSize, photoService: service)
+        service = PhotoServiceCached(photoService: service, cacheService: imageCacheService)
+        service = PhotoServiceSynchronized(photoService: service)
+        return service
+    }()
+    
+    var imageCacheService: ImageCacheService { ImageCacheService() }
 }
