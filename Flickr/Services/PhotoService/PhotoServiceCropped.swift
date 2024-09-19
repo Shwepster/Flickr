@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class PhotoServiceCropped: PhotoService {
+struct PhotoServiceCropped: PhotoService {
     private let photoService: PhotoService
     private let cropSize: CGSize
     
