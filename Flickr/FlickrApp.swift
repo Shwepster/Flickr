@@ -13,7 +13,7 @@ struct FlickrApp: App {
         WindowGroup {
             ContentView().task {
                 Task(priority: .high) {
-                    await testApi()
+//                    await testApi()
                 }
             }
         }
@@ -34,7 +34,7 @@ func testApi() async {
             for photo in result.photo + result.photo + result.photo {
                 group.addTask {
                     let image = await service.loadImage(for: photo, size: AppSettings.photoSize)
-                    print("image: \(photo.id) - \(image?.size)")
+//                    print("image: \(photo.id) - \(image?.size)")
                 }
             }
             
