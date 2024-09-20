@@ -15,7 +15,7 @@ actor ImageCacheService {
         guard let cacheDirectory = fileManager.urls(
             for: .cachesDirectory,
             in: .userDomainMask
-        ).first, let data = image.heicData() else { return }
+        ).first, let data = image.jpegData(compressionQuality: 1) else { return }
         
         let fileURL = cacheDirectory.appendingPathComponent("\(id).\(imageExtension)")
         
