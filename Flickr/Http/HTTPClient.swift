@@ -8,10 +8,10 @@
 import Foundation
 
 final class HTTPClient {
-    private let session: URLSession
+    private let session: URLSessionProtocol
     var logResponse: Bool = false
     
-    init(session: URLSession = .shared) {
+    init(session: URLSessionProtocol = URLSession.shared) {
         self.session = session
     }
     
