@@ -80,27 +80,38 @@ final class ImageCacheTests: XCTestCase {
     }
     
     func testConcurrentAccess() async throws {
-        await withTaskGroup(of: Void.self) { [weak self] group in
-            guard let self = self else {
-                XCTFail("self is nil")
-                return
+        await withTaskGroup(of: Void.self) { [image, compressedImage, service] group in
+            func cacheAndValidate(image: UIImage, id: String) async {
+                await service!.cache(image: image, for: id)
+                
+                let cachedImage = await service!.getImage(for: id)
+                XCTAssertNotNil(cachedImage)
+                
+                XCTAssertTrue(
+                    cachedImage!.pngData() == compressedImage.pngData()
+                )
             }
             
             let range = 1...10
             
             for i in range {
-                let id = "\(i)"
                 group.addTask {
-                    await self.cacheAndValidate(image: self.image, id: id)
+                    let id = "\(i)"
+                    await cacheAndValidate(image: image, id: id)
+                }
+                
+                group.addTask {
+                    let id = "\(i)"
+                    await cacheAndValidate(image: image, id: id)
                 }
             }
             
             await group.waitForAll()
             
             for i in range {
-                let id = "\(i)"
                 group.addTask {
-                    let cachedImage = await self.service.getImage(for: id)
+                    let id = "\(i)"
+                    let cachedImage = await service!.getImage(for: id)
                     XCTAssertNotNil(cachedImage)
                 }
             }

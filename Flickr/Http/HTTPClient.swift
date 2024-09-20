@@ -7,12 +7,13 @@
 
 import Foundation
 
-final class HTTPClient {
+final class HTTPClient: @unchecked Sendable {
     private let session: URLSessionProtocol
-    var logResponse: Bool = false
+    private let logResponse: Bool
     
-    init(session: URLSessionProtocol = URLSession.shared) {
+    init(session: URLSessionProtocol = URLSession.shared, logResponse: Bool = false) {
         self.session = session
+        self.logResponse = logResponse
     }
     
     // MARK: - Public

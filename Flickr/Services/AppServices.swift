@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class AppServices {
+final class AppServices: @unchecked Sendable {
     static let shared = AppServices()
     private init() {}
     
@@ -23,10 +23,10 @@ final class AppServices {
     private(set) lazy var photoService: PhotoService = {
         var service: PhotoService = PhotoServiceRaw(flickrService: flickrService)
         service = PhotoServiceCropped(cropSize: AppSettings.photoSize.cgSize, photoService: service)
-        service = PhotoServiceCached(photoService: service, cacheService: imageCacheService)
+        
+        let cache = ImageCacheService()
+        service = PhotoServiceCached(photoService: service, cacheService: cache)
         service = PhotoServiceSynchronized(photoService: service)
         return service
     }()
-    
-    var imageCacheService: ImageCacheService { ImageCacheService() }
 }
