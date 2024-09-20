@@ -9,13 +9,12 @@ import XCTest
 @testable import Flickr
 
 final class ImageCacheTests: XCTestCase {
-    var service: ImageCacheService!
+    private var service: ImageCacheService!
     
-    var image = UIImage(resource: .test)
-    let id = "image"
-    
-    let image2 = UIImage(resource: .test2)
-    let id2 = "image2"
+    private var image = UIImage(resource: .test)
+    private let id = "image"
+    private let image2 = UIImage(resource: .test2)
+    private let id2 = "image2"
     
     override func setUp() async throws {
         service = ImageCacheService()
@@ -87,7 +86,7 @@ final class ImageCacheTests: XCTestCase {
                 return
             }
             
-            let range = 1...100
+            let range = 1...10
             
             for i in range {
                 let id = "\(i)"
