@@ -26,8 +26,8 @@ final class HTTPClientTests: XCTestCase {
     func testCancelRequest() async {
         urlSessionMock.setRequestDelayTime(1)
         
-        let task = Task<Data, Error> {
-            try await client.request(mockRequest)
+        let task = Task<Data, Error> { [client, mockRequest] in
+            try await client!.request(mockRequest)
         }
         
         task.cancel()

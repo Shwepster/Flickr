@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol PhotoService {
+protocol PhotoService: Sendable {
     func loadImage(for photo: PhotoDTO, size: PhotoSize) async -> UIImage?
     func cancelPhotoLoading(for photo: PhotoDTO)
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class FlickrService {
+final class FlickrService: Sendable {
     private let httpClient: HTTPClient
     private let requestBuilder: FlickrRequestBuilder
     private let decoder = JSONDecoder()

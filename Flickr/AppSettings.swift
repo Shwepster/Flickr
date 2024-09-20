@@ -9,5 +9,5 @@ import Foundation
 
 struct AppSettings {
     static let photosPerPage = 20
-    static var photoSize = PhotoSize.b
+    static let photoSize = PhotoSize.b
 }
