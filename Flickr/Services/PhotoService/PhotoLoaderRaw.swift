@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct PhotoServiceRaw: PhotoService {
+struct PhotoLoaderRaw: PhotoLoader {
     private let flickrService: FlickrService
     
     init(flickrService: FlickrService) {
@@ -22,7 +22,5 @@ struct PhotoServiceRaw: PhotoService {
             print("Error loading photo: \(error)")
             return nil
         }
-    }
-    
-    func cancelPhotoLoading(for photo: PhotoDTO) {}
+    }    
 }

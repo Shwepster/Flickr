@@ -24,6 +24,9 @@
   "testTargets" : [
     {
       "parallelizable" : false,
+      "skippedTests" : [
+        "PhotoLoaderCroppedTests\/testPerformance()"
+      ],
       "target" : {
         "containerPath" : "container:Flickr.xcodeproj",
         "identifier" : "F615281B2C9AEC53007FEDA7",

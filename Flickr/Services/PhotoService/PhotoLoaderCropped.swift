@@ -7,24 +7,20 @@
 
 import UIKit
 
-struct PhotoServiceCropped: PhotoService {
-    private let photoService: PhotoService
+struct PhotoLoaderCropped: PhotoLoader {
+    private let photoLoader: PhotoLoader
     private let cropSize: CGSize
     
-    init(cropSize: CGSize, photoService: PhotoService) {
+    init(cropSize: CGSize, photoLoader: PhotoLoader) {
         self.cropSize = cropSize
-        self.photoService = photoService
+        self.photoLoader = photoLoader
     }
     
     func loadImage(for photo: PhotoDTO, size: PhotoSize) async -> UIImage? {
-        let image = await photoService.loadImage(for: photo, size: size)
+        let image = await photoLoader.loadImage(for: photo, size: size)
         
         if Task.isCancelled { return nil }
         
         return await image?.byPreparingThumbnail(ofSize: cropSize)
-    }
-    
-    func cancelPhotoLoading(for photo: PhotoDTO) {
-        photoService.cancelPhotoLoading(for: photo)
     }
 }

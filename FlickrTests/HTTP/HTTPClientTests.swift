@@ -13,6 +13,8 @@ final class HTTPClientTests: XCTestCase {
     private var urlSessionMock: URLSessionMock!
     private let mockRequest: URLRequest = .init(url: .init(string: "https://example.com")!)
 
+    // MARK: - Setup
+    
     override func setUp() {
         urlSessionMock = URLSessionMock()
         client = HTTPClient(session: urlSessionMock)
@@ -23,6 +25,8 @@ final class HTTPClientTests: XCTestCase {
         client = nil
     }
     
+    // MARK: - Tests
+
     func testCancelRequest() async {
         urlSessionMock.setRequestDelayTime(1)
         

@@ -1,5 +1,5 @@
 //
-//  PhotoServiceCached.swift
+//  PhotoLoaderCached.swift
 //  Flickr
 //
 //  Created by Maxim Vynnyk on 19.09.2024.
@@ -7,12 +7,12 @@
 
 import UIKit
 
-struct PhotoServiceCached: PhotoService {
-    private let photoService: PhotoService
+struct PhotoLoaderCached: PhotoLoader {
+    private let photoLoader: PhotoLoader
     private let cacheService: ImageCacheService
     
-    init(photoService: PhotoService, cacheService: ImageCacheService) {
-        self.photoService = photoService
+    init(photoLoader: PhotoLoader, cacheService: ImageCacheService) {
+        self.photoLoader = photoLoader
         self.cacheService = cacheService
     }
     
@@ -25,7 +25,7 @@ struct PhotoServiceCached: PhotoService {
             return image
         }
         
-        guard let image = await photoService.loadImage(for: photo, size: size) else {
+        guard let image = await photoLoader.loadImage(for: photo, size: size) else {
             return nil
         }
         
@@ -34,10 +34,6 @@ struct PhotoServiceCached: PhotoService {
         }
         
         return image
-    }
-    
-    func cancelPhotoLoading(for photo: PhotoDTO) {
-        photoService.cancelPhotoLoading(for: photo)
     }
     
     // MARK: - Private

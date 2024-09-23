@@ -11,11 +11,13 @@ import XCTest
 final class ImageCacheTests: XCTestCase {
     private var service: ImageCacheService!
     
-    private var image = UIImage(resource: .test)
+    private let image = SharedTestData.image
     private let id = "image"
-    private let image2 = UIImage(resource: .test2)
+    private let image2 = SharedTestData.image2
     private let id2 = "image2"
     
+    // MARK: - Setup
+
     override func setUp() async throws {
         service = ImageCacheService()
         await service.clearCache()
@@ -25,6 +27,8 @@ final class ImageCacheTests: XCTestCase {
         await service.clearCache()
         service = nil
     }
+    
+    // MARK: - Tests
     
     func testSavingToCache() async throws {
         await cacheAndValidate(image: image, id: id)
@@ -120,7 +124,7 @@ final class ImageCacheTests: XCTestCase {
 
     // MARK: - Helpers
     
-    func cacheAndValidate(image: UIImage, id: String) async {
+    private func cacheAndValidate(image: UIImage, id: String) async {
         await service.cache(image: image, for: id)
        
         let cachedImage = await service.getImage(for: id)
@@ -130,14 +134,14 @@ final class ImageCacheTests: XCTestCase {
         XCTAssertTrue(testImagesEqual(cached: cachedImage!, compressedOriginal: compressedOriginal))
     }
     
-    lazy var compressedImage = UIImage(data: image.jpegData(compressionQuality: 1)!)!
-    lazy var compressedImage2 = UIImage(data: image2.jpegData(compressionQuality: 1)!)!
+    private lazy var compressedImage = UIImage(data: image.jpegData(compressionQuality: 1)!)!
+    private lazy var compressedImage2 = UIImage(data: image2.jpegData(compressionQuality: 1)!)!
     
-    func testImagesEqual(cached: UIImage, compressedOriginal: UIImage) -> Bool {
+    private func testImagesEqual(cached: UIImage, compressedOriginal: UIImage) -> Bool {
         cached.pngData() == compressedOriginal.pngData()
     }
     
-    func compressedVersion(for image: UIImage) -> UIImage {
+    private func compressedVersion(for image: UIImage) -> UIImage {
         switch image {
             case self.image:
                 return compressedImage
