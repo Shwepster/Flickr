@@ -9,5 +9,5 @@ import Foundation
 
 protocol FlickrService: Sendable {
     func search(for query: String, page: Int, perPage: Int) async throws -> PageDTO
-    func loadImage(for photo: PhotoDTO, size: PhotoSize) async throws -> Data
+    func loadImageData(for photo: PhotoDTO, size: PhotoSize) async throws -> Data
 }

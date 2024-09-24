@@ -36,7 +36,7 @@ final class FlickrServiceDefault: FlickrService {
         return page
     }
     
-    func loadImage(for photo: PhotoDTO, size: PhotoSize) async throws -> Data {        
+    func loadImageData(for photo: PhotoDTO, size: PhotoSize) async throws -> Data {        
         let data = try await httpClient.request(
             requestBuilder.image(
                 id: photo.id,

@@ -16,7 +16,7 @@ struct PhotoLoaderRaw: PhotoLoader {
     
     func loadImage(for photo: PhotoDTO, size: PhotoSize) async -> UIImage? {
         do {
-            let imageData = try await flickrService.loadImage(for: photo, size: size)
+            let imageData = try await flickrService.loadImageData(for: photo, size: size)
             return UIImage(data: imageData)
         } catch {
             print("Error loading photo: \(error)")
