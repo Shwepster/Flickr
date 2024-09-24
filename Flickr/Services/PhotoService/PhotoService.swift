@@ -12,6 +12,10 @@ final class PhotoService: Sendable {
     private let loadingTasks: Mutex<[String: Task<UIImage?, Never>]> = .init([:])
     private let photoLoader: PhotoLoader
     
+    var activeTasks: Int {
+        loadingTasks.withLock { $0.keys.count }
+    }
+    
     init(photoLoader: PhotoLoader) {
         self.photoLoader = photoLoader
     }
@@ -39,5 +43,11 @@ final class PhotoService: Sendable {
     
     func cancelPhotoLoading(for photo: PhotoDTO) {
         loadingTasks.withLock { $0[photo.id]?.cancel() }
+    }
+    
+    func cancelAllPhotoLoading() {
+        loadingTasks.withLock { $0.values.forEach {
+            $0.cancel()
+        } }
     }
 }

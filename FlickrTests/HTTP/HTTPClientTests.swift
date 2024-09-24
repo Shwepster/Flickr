@@ -17,7 +17,7 @@ final class HTTPClientTests: XCTestCase {
     
     override func setUp() {
         urlSessionMock = URLSessionMock()
-        client = HTTPClient(session: urlSessionMock)
+        client = HTTPClient(session: urlSessionMock, logResponse: true)
     }
     
     override func tearDown() {

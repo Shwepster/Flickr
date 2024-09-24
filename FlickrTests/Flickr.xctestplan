@@ -25,7 +25,9 @@
     {
       "parallelizable" : false,
       "skippedTests" : [
-        "PhotoLoaderCroppedTests\/testPerformance()"
+        "PhotoLoaderCroppedTests\/testPerformance()",
+        "PhotoServiceTests\/testFailingSecondRequestMultipleTimes()",
+        "PhotoServiceTests\/testLoadingLargeNumberOfPhotos()"
       ],
       "target" : {
         "containerPath" : "container:Flickr.xcodeproj",

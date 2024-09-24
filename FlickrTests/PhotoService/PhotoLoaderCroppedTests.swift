@@ -71,6 +71,7 @@ final class PhotoLoaderCroppedTests: XCTestCase {
     func testPerformance() async {
         let largeImage = UIImage(resource: .testLarge)
         flickrService.data = largeImage.pngData()
+        flickrService.delay = 0
         
         measure {
             let exp = expectation(description: "Finished")
@@ -82,7 +83,7 @@ final class PhotoLoaderCroppedTests: XCTestCase {
                 exp.fulfill()
             }
             
-            wait(for: [exp], timeout: 1.0)
+            wait(for: [exp], timeout: 1)
         }
     }
     
