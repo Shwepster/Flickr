@@ -6,33 +6,49 @@
 //
 
 import Foundation
+import Synchronization
 @testable import Flickr
 
 final class FlickrServiceMock: FlickrService, @unchecked Sendable {
     var data: Data?
     var pageDTO: PageDTO?
     var error: MockError?
+    var delay: TimeInterval = 0
+    var failAfterRequestCount: Int?
+    let requestCount: Atomic<Int> = .init(0)
     
-    func search(for query: String, page: Int, perPage: Int) async throws -> PageDTO {
-        if let error { throw error }
+    private func mockRequest<T>(returnObject: T?) async throws -> T {
+        let count = requestCount.add(1, ordering: .acquiringAndReleasing).newValue
+        if let failAfterRequestCount, count > failAfterRequestCount {
+            throw MockError.noData
+        }
         
-        if let pageDTO { return pageDTO }
+        if delay > 0 {
+            try await Task.sleep(for: .seconds(delay))
+        }
+        
+        try Task.checkCancellation()
+        if let error { throw error }
+        if let returnObject { return returnObject }
         
         throw MockError.noData
     }
     
+    func search(for query: String, page: Int, perPage: Int) async throws -> PageDTO {
+        try await mockRequest(returnObject: pageDTO)
+    }
+    
     func loadImage(for photo: PhotoDTO, size: PhotoSize) async throws -> Data {
-        if let error { throw error }
-        
-        if let data { return data }
-        
-        throw MockError.noData
+        try await mockRequest(returnObject: data)
     }
     
     func reset() {
         data = nil
         pageDTO = nil
         error = nil
+        delay = 0
+        failAfterRequestCount = nil
+        requestCount.store(0, ordering: .sequentiallyConsistent)
     }
 }
 
@@ -41,7 +57,6 @@ final class FlickrServiceMock: FlickrService, @unchecked Sendable {
 extension FlickrServiceMock {
     enum MockError: Error {
         case noData
-        case noPage
         case other
     }
 }
