@@ -14,19 +14,18 @@ final class AppServices: @unchecked Sendable {
     private(set) lazy var flickrService: FlickrService = {
         let key = ProcessInfo.processInfo.environment["KEY"]!
         
-        return FlickrService(
+        return FlickrServiceDefault(
             httpClient: HTTPClient(),
             requestBuilder: FlickrRequestBuilder(key: key)
         )
     }()
     
     private(set) lazy var photoService: PhotoService = {
-        var service: PhotoService = PhotoServiceRaw(flickrService: flickrService)
-        service = PhotoServiceCropped(cropSize: AppSettings.photoSize.cgSize, photoService: service)
+        var service: PhotoLoader = PhotoLoaderRaw(flickrService: flickrService)
+        service = PhotoLoaderCropped(cropSize: AppSettings.photoSize.cgSize, photoLoader: service)
         
         let cache = ImageCacheService()
-        service = PhotoServiceCached(photoService: service, cacheService: cache)
-        service = PhotoServiceSynchronized(photoService: service)
-        return service
+        service = PhotoLoaderCached(photoLoader: service, cacheService: cache)
+        return .init(photoLoader: service)
     }()
 }
