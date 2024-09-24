@@ -38,7 +38,7 @@ final class FlickrServiceMock: FlickrService, @unchecked Sendable {
         try await mockRequest(returnObject: pageDTO)
     }
     
-    func loadImage(for photo: PhotoDTO, size: PhotoSize) async throws -> Data {
+    func loadImageData(for photo: PhotoDTO, size: PhotoSize) async throws -> Data {
         try await mockRequest(returnObject: data)
     }
     

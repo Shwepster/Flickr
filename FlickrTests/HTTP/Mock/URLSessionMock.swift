@@ -10,7 +10,7 @@ import Foundation
 
 final class URLSessionMock: URLSessionProtocol {
     /// In seconds
-    private var requestDelayTime: Int = 0
+    private var requestDelayTime: TimeInterval = 0
     private var response: URLResponse = .init()
     private var data: Data = .init()
     
@@ -39,7 +39,7 @@ final class URLSessionMock: URLSessionProtocol {
         self.data = data
     }
     
-    func setRequestDelayTime(_ time: Int) {
+    func setRequestDelayTime(_ time: TimeInterval) {
         requestDelayTime = time
     }
     
