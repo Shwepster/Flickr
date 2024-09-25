@@ -18,6 +18,7 @@ enum ServiceContainer {
                                              factory: @autoclosure @escaping @Sendable () -> ServiceT) {
         let key = String(describing: type)
         factories.withLock { $0[key] = factory }
+        cache.withLock { $0[key] = nil } // remove old singletone
     }
     
     static func register<ServiceT: Sendable>(_ type: ServiceT.Type,
@@ -57,11 +58,16 @@ enum ServiceContainer {
                 return service
             }
         }
-        throw .unableToInitializeService
+        throw .unableToInitializeService(key)
     }
     
     static func resolve<ServiceT: Sendable>(lifetime: ServiceType) throws(ResolveError) -> ServiceT {
         try resolve(ServiceT.self, lifetime: lifetime)
+    }
+    
+    static func unregisterAll() {
+        factories.withLock { $0.removeAll() }
+        cache.withLock { $0.removeAll() }
     }
 }
 
@@ -78,6 +84,6 @@ extension ServiceContainer {
 
 extension ServiceContainer {
     enum ResolveError: Error {
-        case unableToInitializeService
+        case unableToInitializeService(String)
     }
 }
