@@ -8,6 +8,7 @@
 import Foundation
 
 final class FlickrServiceDefault: FlickrService {
+    var key: String { requestBuilder.key }
     private let httpClient: HTTPClient
     private let requestBuilder: FlickrRequestBuilder
     private let decoder = JSONDecoder()
