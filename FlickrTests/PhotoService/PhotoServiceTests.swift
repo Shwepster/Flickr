@@ -30,14 +30,14 @@ final class PhotoServiceTests: XCTestCase {
     
     func testMultipleUniqueLoadings() async {
         flickrService.data = image.pngData()
-        flickrService.delay = 0.5
+        flickrService.delay = 0.3
         let photos = PhotoDTO.mocks
         await loadPhotosExpectedNonNil(photos: photos, expectedActiveTasks: photos.count)
     }
     
     func testRepeatingLoadings() async {
         flickrService.data = image.pngData()
-        flickrService.delay = 0.5
+        flickrService.delay = 0.3
         let photos = Array(repeating: PhotoDTO.mock, count: 5)
         // For the same 5 photos must be only 1 task
         await loadPhotosExpectedNonNil(photos: photos, expectedActiveTasks: 1)
@@ -45,7 +45,7 @@ final class PhotoServiceTests: XCTestCase {
     
     func testLoadingLargeNumberOfPhotos() async {
         flickrService.data = image.pngData()
-        flickrService.delay = 0.5
+        flickrService.delay = 0.3
         let photos = Array(repeating: PhotoDTO.mock, count: 500)
         
         let startTime = Date()
@@ -59,7 +59,7 @@ final class PhotoServiceTests: XCTestCase {
     
     func testCancelAllLoadings() async {
         flickrService.data = image.pngData()
-        flickrService.delay = 0.5
+        flickrService.delay = 0.3
         let photos = PhotoDTO.mocks
         
         do {
@@ -99,7 +99,7 @@ final class PhotoServiceTests: XCTestCase {
     
     func testCancelSingleLoadingInMultiple() async {
         flickrService.data = image.pngData()
-        flickrService.delay = 0.5
+        flickrService.delay = 0.3
         let photos = PhotoDTO.mocks
         let photoToCancel = photos.randomElement()
         

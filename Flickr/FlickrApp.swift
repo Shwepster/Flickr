@@ -12,8 +12,10 @@ struct FlickrApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView().task {
+                AppServicesRegistrator.registerAllServices()
+                
                 Task(priority: .high) {
-//                    await testApi()
+                    await testApi()
                 }
             }
         }
@@ -22,24 +24,26 @@ struct FlickrApp: App {
 
 func testApi() async {
     do {
-        let result = try await AppServices.shared.flickrService.search(
+        @ServiceLocator var flickrService: FlickrService
+        
+        let result = try await flickrService.search(
             for: "cat",
             page: 1,
             perPage: AppSettings.photosPerPage
         )
         
-        let service = AppServices.shared.photoService
+        @ServiceLocator var photoService: PhotoService
         
-        await withTaskGroup(of: Void.self) { group in
-            for photo in result.photo + result.photo + result.photo {
+        await withTaskGroup(of: Void.self) { [photoService] group in
+            for photo in result.photo {
                 group.addTask {
-                    let _ = await service.loadImage(for: photo, size: AppSettings.photoSize)
-//                    print("image: \(photo.id) - \(image?.size)")
+                    let image = await photoService.loadImage(for: photo, size: AppSettings.photoSize)
+                    print("image: \(photo.id) - \(image?.size)")
                 }
             }
             
             for photo in result.photo {
-                service.cancelPhotoLoading(for: photo)
+                photoService.cancelPhotoLoading(for: photo)
             }
         } 
     } catch {
