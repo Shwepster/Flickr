@@ -47,22 +47,18 @@ final class HTTPClientTests: XCTestCase {
     
     func testErrorInRequest() async {
         urlSessionMock.setResponseCode(404)
-        
         await requestWithExpectedError(.notFound)
         
         urlSessionMock.reset()
         urlSessionMock.setResponseCode(401)
-        
         await requestWithExpectedError(.noPermission)
         
         urlSessionMock.reset()
         urlSessionMock.setResponseCode(500)
-        
         await requestWithExpectedError(.invalidStatusCode(500))
         
         urlSessionMock.reset()
         urlSessionMock.setResponse(.init(), data: .init())
-        
         await requestWithExpectedError(.unexpectedResponseType)
     }
     
