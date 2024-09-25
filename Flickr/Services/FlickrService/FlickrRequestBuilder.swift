@@ -8,7 +8,7 @@
 import Foundation
 
 struct FlickrRequestBuilder {
-    private let key: String
+    let key: String
     private let format = "json"
     
     init(key: String) {

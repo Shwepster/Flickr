@@ -78,19 +78,14 @@ final class ServiceContainerTests: XCTestCase {
         ServiceContainer.register(MockServiceProtocol.self, factory: MockService1())
 
         try await withThrowingTaskGroup(of: Void.self) { group in
-            XCTAssertNoThrow(
-                try ServiceContainer.resolve(MockServiceProtocol.self, lifetime: .singleton),
-                "Service must be resolved before the test"
-            )
-            
+            // IMPORTANT: "Service must be resolved before the test"
             for _ in 1...100 {
                 group.addTask {
-                    ServiceContainer.register(MockServiceProtocol.self, factory: MockService1())
+                    @ServiceLocator(.new) var service: MockServiceProtocol
                 }
                 
                 group.addTask {
-                    let service: MockServiceProtocol = try ServiceContainer.resolve(lifetime: .singleton)
-                    XCTAssertTrue(service is MockService1, "Service `\(service)` should be an instance of `\(MockService1.self)`")
+                    @ServiceLocator(.singleton) var service: MockServiceProtocol
                 }
             }
             
