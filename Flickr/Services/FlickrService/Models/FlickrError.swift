@@ -18,6 +18,8 @@ enum FlickrError: Error, Equatable {
             self = .serviceUnavailable
         case FlickrError.searchUnavailable.code:
             self = .searchUnavailable
+        case FlickrError.noSearchTerm.code:
+            self = .noSearchTerm
         default:
             self = .invalidStatusCode(code)
         }
@@ -28,18 +30,20 @@ enum FlickrError: Error, Equatable {
     case badUrl
     case serviceUnavailable
     case searchUnavailable
+    case noSearchTerm
     // Custom errors
     case noData
     case invalidStatusCode(Int)
     
     var code: Int {
         switch self {
-            case .noData: return 0
-            case .invalidApiKey: return 100
-            case .badUrl: return 116
-            case .serviceUnavailable: return 105
-            case .searchUnavailable: return 106
-            case .invalidStatusCode(let code): return code
+        case .noData: return 0
+        case .noSearchTerm: return 3
+        case .invalidApiKey: return 100
+        case .badUrl: return 116
+        case .serviceUnavailable: return 105
+        case .searchUnavailable: return 106
+        case .invalidStatusCode(let code): return code
         }
     }
 }

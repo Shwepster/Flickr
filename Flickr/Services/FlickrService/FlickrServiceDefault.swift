@@ -29,6 +29,7 @@ final class FlickrServiceDefault: FlickrService {
             )
         )
         
+        try Task.checkCancellation()
         let model = try decoder.decode(PhotosResponseDTO.self, from: data)
         
         try checkFlickrResponseStatus(model)

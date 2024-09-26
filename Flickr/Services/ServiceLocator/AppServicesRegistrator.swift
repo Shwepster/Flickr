@@ -13,6 +13,10 @@ enum AppServicesRegistrator {
         registerPhotoService()
     }
     
+    static func unregisterAllServices() {
+        ServiceContainer.unregisterAll()
+    }
+    
     // MARK: - Individual registrations
     
     private static func registerFlickrService() {
