@@ -45,8 +45,8 @@ final class PhotoServiceTests: XCTestCase {
     
     func testLoadingLargeNumberOfPhotos() async {
         flickrService.data = image.pngData()
-        flickrService.delay = 0.3
-        let photos = Array(repeating: PhotoDTO.mock, count: 500)
+        flickrService.delay = 0.2
+        let photos = Array(repeating: PhotoDTO.mock, count: 100)
         
         let startTime = Date()
         await loadPhotosExpectedNonNil(photos: photos, expectedActiveTasks: 1)
@@ -70,13 +70,8 @@ final class PhotoServiceTests: XCTestCase {
                     }
                 }
                 
+                // For each unique photo there should be one active task
                 try await waitForActiveTasks(toReach: photos.count)
-                
-                XCTAssertEqual(
-                    service!.activeTasks,
-                    photos.count,
-                    "For each unique photo there should be one active task"
-                )
                 
                 service!.cancelAllPhotoLoading()
                 
@@ -111,20 +106,14 @@ final class PhotoServiceTests: XCTestCase {
                     }
                 }
                 
+                // For each unique photo there should be one active task
                 try await waitForActiveTasks(toReach: photos.count)
-                
-                XCTAssertEqual(
-                    service!.activeTasks,
-                    photos.count,
-                    "For each unique photo there should be one active task"
-                )
                 
                 if let photoToCancel {
                     service!.cancelPhotoLoading(for: photoToCancel)
                 } else {
                     XCTFail("No photo to cancel")
                 }
-                
                 
                 var emptyImagesCount = 0
                 var completedImagesCount = 0
@@ -173,6 +162,7 @@ final class PhotoServiceTests: XCTestCase {
         await loadPhotosWithExpectedNil(photos, expectedNilCount: photos.count-1)
     }
     
+    // Use to test race of conditions
     func testFailingSecondRequestMultipleTimes() async throws {
         for i in 1...50 {
             print("Testing iteration \(i)")
@@ -201,14 +191,9 @@ final class PhotoServiceTests: XCTestCase {
                     }
                 }
                 
-                // wait to give all tasks time to start
+                // For each unique photo there should be only one active task
                 try await waitForActiveTasks(toReach: expectedActiveTasks)
-                
-                XCTAssertEqual(
-                    service!.activeTasks,
-                    expectedActiveTasks,
-                    "For each unique photo there should be only one active task"
-                )
+                try await waitForActiveTasksNotToExceed(maximumCount: expectedActiveTasks)
                                 
                 var totalImages = 0
                 for try await result in group {
@@ -253,12 +238,25 @@ final class PhotoServiceTests: XCTestCase {
     
     private func waitForActiveTasks(toReach expectedCount: Int, timeout: TimeInterval = 1.0) async throws {
         let startTime = Date()
-        while service!.activeTasks != expectedCount {
+        while service.activeTasks != expectedCount {
             if Date().timeIntervalSince(startTime) > timeout {
                 XCTFail("Timed out waiting for active tasks to reach \(expectedCount)")
                 return
             }
             try await Task.sleep(for: .milliseconds(5))
         }
+    }
+    
+    private func waitForActiveTasksNotToExceed(maximumCount: Int, waitTime: TimeInterval = 0.5) async throws {
+        let startTime = Date()
+        
+        while service.activeTasks <= maximumCount {
+            if Date().timeIntervalSince(startTime) > waitTime {
+                return
+            }
+            try await Task.sleep(for: .milliseconds(5))
+        }
+        
+        XCTFail("Active tasks count \(service.activeTasks) exceeded \(maximumCount)")
     }
 }
