@@ -8,12 +8,18 @@
 enum FlickrError: Error, Equatable {
     init(code: Int) {
         switch code {
-            case 0: self = .noData
-            case 100: self = .invalidApiKey
-            case 116: self = .badUrl
-            case 105: self = .serviceUnavailable
-            case 106: self = .searchUnavailable
-            default: self = .invalidStatusCode(code)
+        case FlickrError.noData.code:
+            self = .noData
+        case FlickrError.invalidApiKey.code:
+            self = .invalidApiKey
+        case FlickrError.badUrl.code:
+            self = .badUrl
+        case FlickrError.serviceUnavailable.code:
+            self = .serviceUnavailable
+        case FlickrError.searchUnavailable.code:
+            self = .searchUnavailable
+        default:
+            self = .invalidStatusCode(code)
         }
     }
     
