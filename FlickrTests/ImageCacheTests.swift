@@ -30,17 +30,27 @@ final class ImageCacheTests: XCTestCase {
     
     // MARK: - Tests
     
-    func testSavingToCache() async throws {
+    func testCacheContainsImage() async {
+        let containsBefore = await service.containsImage(for: id)
+        XCTAssertFalse(containsBefore)
+        
+        await cacheAndValidate(image: image, id: id)
+        
+        let containsAfter = await service.containsImage(for: id)
+        XCTAssertTrue(containsAfter)
+    }
+    
+    func testSavingToCache() async {
         await cacheAndValidate(image: image, id: id)
         await cacheAndValidate(image: image2, id: id2)
     }
     
-    func testReplacingCachedImage() async throws {
+    func testReplacingCachedImage() async {
         await cacheAndValidate(image: image, id: id)
         await cacheAndValidate(image: image2, id: id2)
 
         // Replace second image with first image
-        await service.cache(image: image, for: id2)
+        await service.cacheWithReplacement(image: image, for: id2)
                 
         // if first unchanged
         if let cacheImage = await service.getImage(for: id) {
@@ -52,8 +62,11 @@ final class ImageCacheTests: XCTestCase {
         
         // if second changed with first
         if let cachedImage2 = await service.getImage(for: id2) {
-            XCTAssertTrue(testImagesEqual(cached: cachedImage2,
-                                          compressedOriginal: compressedVersion(for: image)))
+            XCTAssertTrue(
+                testImagesEqual(cached: cachedImage2,
+                                compressedOriginal: compressedVersion(for: image)),
+                "Second image should be replaced by first"
+            )
         } else {
             XCTFail("Image not found in cache")
         }
