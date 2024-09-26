@@ -11,6 +11,7 @@ import XCTest
 final class FlickrErrorTests: XCTestCase {
     func testErrorCodes() {
         validateThatError(code: 0, is: .noData)
+        validateThatError(code: 3, is: .noSearchTerm)
         validateThatError(code: 100, is: .invalidApiKey)
         validateThatError(code: 116, is: .badUrl)
         validateThatError(code: 105, is: .serviceUnavailable)

@@ -83,7 +83,7 @@ extension ServiceContainer {
 // MARK: - ResolveError
 
 extension ServiceContainer {
-    enum ResolveError: Error {
+    enum ResolveError: Error, Equatable {
         case unableToInitializeService(String)
     }
 }
