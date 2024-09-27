@@ -18,9 +18,16 @@ struct PhotoLoaderRaw: PhotoLoader {
         do {
             let imageData = try await flickrService.loadImageData(for: photo, size: size)
             return UIImage(data: imageData)
+        } catch is CancellationError {
+            print("Loading photo was cancelled")
+            return nil
         } catch {
-            print("Error loading photo: \(error)")
+            if let error = error as? URLError, error.errorCode == -999 {
+                print("Loading photo was cancelled")
+            } else {
+                print("Error loading photo: \(error)")
+            }
             return nil
         }
-    }    
+    }
 }

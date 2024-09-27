@@ -7,13 +7,13 @@
 
 import Foundation
 
-final class FlickrSearchPaginator {
+actor FlickrSearchPaginator {
     @ServiceLocator private var flickrService: FlickrService
     private let perPage: Int
     private(set) var page: Int = 0
     private(set) var searchTerm: String = ""
     private var totalPages: Int?
-    @Published private(set) var isLoading: Bool = false
+    private(set) var isLoading: Bool = false
     
     init(perPage: Int = 20) {
         self.perPage = perPage

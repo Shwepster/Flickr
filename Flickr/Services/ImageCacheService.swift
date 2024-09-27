@@ -12,27 +12,32 @@ actor ImageCacheService {
     private let imageExtension = "jpg"
     
     func cache(image: UIImage, for id: String) {
-        guard let cacheDirectory = fileManager.urls(
-            for: .cachesDirectory,
-            in: .userDomainMask
-        ).first, let data = image.jpegData(compressionQuality: 1) else { return }
-        
-        let fileURL = cacheDirectory.appendingPathComponent("\(id).\(imageExtension)")
-        
+        if !containsImage(for: id) {
+            cacheWithReplacement(image: image, for: id)
+        }
+    }
+    
+    func cacheWithReplacement(image: UIImage, for id: String) {
+        let url = url(for: id)
+        guard let data = image.jpegData(compressionQuality: 1) else { return }
+                
         do {
-            try data.write(to: fileURL)
-            print("File saved to cache: \(fileURL.lastPathComponent)")
+            try data.write(to: url)
+            print("File saved to cache: \(url.lastPathComponent)")
         } catch {
             print("Failed to save file: \(error)")
         }
     }
     
     func getImage(for id: String) -> UIImage? {
-        let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        let cacheFileURL = cacheDirectory.appendingPathComponent("\(id).\(imageExtension)")
-        
-        guard fileManager.fileExists(atPath: cacheFileURL.path) else { return nil }
-        return UIImage(contentsOfFile: cacheFileURL.path)
+        let url = url(for: id)
+        guard fileManager.fileExists(atPath: url.path) else { return nil }
+        return UIImage(contentsOfFile: url.path)
+    }
+    
+    func containsImage(for id: String) -> Bool {
+        let url = url(for: id)
+        return fileManager.fileExists(atPath: url.path)
     }
     
     func clearCache() {
@@ -53,5 +58,12 @@ actor ImageCacheService {
         } catch {
             print("Failed to remove files: \(error)")
         }
+    }
+    
+    // MARK: - Helpers
+    
+    private func url(for id: String) -> URL {
+        let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        return cacheDirectory.appendingPathComponent("\(id).\(imageExtension)")
     }
 }

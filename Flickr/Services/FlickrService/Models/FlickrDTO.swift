@@ -21,7 +21,7 @@ struct PageDTO: Codable {
     let photo: [PhotoDTO]
 }
 
-struct PhotoDTO: Codable {
+struct PhotoDTO: Codable, Identifiable {
     let id: String
     let owner: String
     let secret: String

@@ -68,6 +68,24 @@ final class PhotoLoaderCachedTests: XCTestCase {
         XCTAssertNil(result, "Expected to fail, due empty cache and empty service.")
     }
     
+    func testMultipleImageLoadings() async {
+        flickrService.data = image.pngData()
+        flickrService.delay = 0.05
+
+        await withTaskGroup(of: Void.self) { [photoLoader] group in
+            for _ in 0...5 {
+                group.addTask {
+                    try? await Task.sleep(for: .seconds(.random(in: 0.1...0.2)))
+                    let _ = await photoLoader!.loadImage(for: .mock, size: .b)
+                }
+            }
+        }
+        
+        flickrService.data = nil
+        let result = await photoLoader.loadImage(for: .mock, size: .b)
+        XCTAssertNotNil(result)
+    }
+    
     // MARK: - Helpers
     
     private func cacheImageAndAssert(for photo: PhotoDTO, size: PhotoSize) async {

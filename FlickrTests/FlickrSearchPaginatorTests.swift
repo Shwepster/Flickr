@@ -39,43 +39,47 @@ final class FlickrSearchPaginatorTests: XCTestCase {
     }
 
     func testLoadingNextPage() async throws {
-        paginator.resetWithSearchTerm("cat")
+        await paginator.resetWithSearchTerm("cat")
         let result = try await paginator.loadNextPage()
         
-        XCTAssertEqual(paginator.page, 1, "Page should be incremented")
+        let page = await paginator.page
+        XCTAssertEqual(page, 1, "Page should be incremented")
         XCTAssertEqual(result.count, pageSize, "Page should contain 10 photos")
     }
     
     func testLoadingTwoPages() async throws {
-        paginator.resetWithSearchTerm("cat")
+        await paginator.resetWithSearchTerm("cat")
         let result1 = try await paginator.loadNextPage()
         let result2 = try await paginator.loadNextPage()
         
-        XCTAssertEqual(paginator.page, 2, "Page should be incremented two times")
+        let page = await paginator.page
+        XCTAssertEqual(page, 2, "Page should be incremented two times")
         XCTAssertEqual(result1.count, pageSize, "Page 1 should contain 10 photos")
         XCTAssertEqual(result2.count, pageSize, "Page 2 should contain 10 photos")
         XCTAssertNotEqual(result1.first?.id, result2.first?.id, "Photos should be different")
     }
     
     func testPagesReset() async throws {
-        paginator.resetWithSearchTerm("cat")
+        await paginator.resetWithSearchTerm("cat")
         
         let result1 = try await paginator.loadNextPage()
         let _       = try await paginator.loadNextPage()
         
-        paginator.resetPages()
-        XCTAssertEqual(paginator.page, 0, "Page should be reset to 0")
+        await paginator.resetPages()
+        let page = await paginator.page
+        XCTAssertEqual(page, 0, "Page should be reset to 0")
         
         let result2 = try await paginator.loadNextPage()
         XCTAssertEqual(result1.first?.id, result2.first?.id, "Photos should same")
     }
     
     func testSearchTermChange() async throws {
-        paginator.resetWithSearchTerm("cat")
+        await paginator.resetWithSearchTerm("cat")
         let result1 = try await paginator.loadNextPage()
         
-        paginator.resetWithSearchTerm("dog")
-        XCTAssertEqual(paginator.page, 0, "Page should be reset to 0")
+        await paginator.resetWithSearchTerm("dog")
+        let page = await paginator.page
+        XCTAssertEqual(page, 0, "Page should be reset to 0")
        
         let result2 = try await paginator.loadNextPage()
         XCTAssertNotEqual(result1.first?.id, result2.first?.id, "Photos should be different")

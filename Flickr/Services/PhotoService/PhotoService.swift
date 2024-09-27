@@ -27,17 +27,31 @@ final class PhotoService: Sendable {
         
         if Task.isCancelled { return nil }
                
-        let task = Task<UIImage?, Never> {
+        let newTask = Task<UIImage?, Never> {
             if Task.isCancelled { return nil }
             let image = await photoLoader.loadImage(for: photo, size: size)
             if Task.isCancelled { return nil }
             return image
         }
         
-        loadingTasks.withLock { $0[photo.id] = task }
-        let image = await task.value
-        loadingTasks.withLock { $0[photo.id] = nil }
+        // This eliminates case when two tasks passed first check
+        // and one had already written to loadingTasks
+        let runningTask: Task<UIImage?, Never>? = loadingTasks.withLock {
+            if let runningTask = $0[photo.id] {
+                print("Photo with id \(photo.id) is already loading")
+                return runningTask
+            } else {
+                $0[photo.id] = newTask
+                return nil
+            }
+        }
         
+        if let runningTask {
+            return await runningTask.value
+        }
+        
+        let image = await newTask.value
+        loadingTasks.withLock { $0[photo.id] = nil }
         return image
     }
     
