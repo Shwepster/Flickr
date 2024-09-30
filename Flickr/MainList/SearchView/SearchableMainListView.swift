@@ -15,13 +15,9 @@ struct SearchableMainListView: View {
         MainListView(viewModel: viewModel.listViewModel)
             .searchable(text: $viewModel.searchText, prompt: "Search for photos")
             .searchFocused($isFocused)
-            .onSubmit(of: .search) {
-                search()
-            }
+            .onSubmit(of: .search) { search() }
             .navigationTitle("Flickr")
-            .onAppear {
-                viewModel.onAppear()
-            }
+            .onAppear { viewModel.onAppear() }
             .overlay {
                 if isFocused {
                     suggestionsView
@@ -41,17 +37,13 @@ struct SearchableMainListView: View {
                         historyView(item)
                     }
                 }
-                .padding(.horizontal)
-                .padding(.bottom)
-                .padding(.top, 4)
-                .background(Color.app.background.mix(with: .black, by: 0.05))
+                .padding()
                 
                 clearHistoryButton
             }
-
+            
             Spacer()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.app.background)
         .animation(.easeInOut, value: viewModel.history)
         .onTapGesture {
@@ -65,7 +57,6 @@ struct SearchableMainListView: View {
             viewModel.clearHistory()
         } label: {
             Text("Clear history")
-                .padding()
         }
     }
     

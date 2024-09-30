@@ -33,7 +33,8 @@ struct FlickrApp: App {
     
     private func configureNavigationBarAppearance() {
         let largeBarAppearance = UINavigationBarAppearance()
-        largeBarAppearance.configureWithTransparentBackground()
+        largeBarAppearance.configureWithOpaqueBackground()
+        largeBarAppearance.backgroundColor = UIColor(.app.barBackground)
         largeBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         largeBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         UINavigationBar.appearance().scrollEdgeAppearance = largeBarAppearance

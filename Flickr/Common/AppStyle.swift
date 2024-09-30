@@ -10,6 +10,7 @@ import SwiftUI
 enum AppStyle {
     static var background: Color { deepPurple }
     static var secondaryBackground: Color { lightPurple }
+    static var barBackground: Color { background.mix(with: .black, by: 0.1) }
     
     static var deepPurple: Color {
         .purple.mix(with: .black, by: 0.5)
