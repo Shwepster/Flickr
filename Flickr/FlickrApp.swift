@@ -9,44 +9,38 @@ import SwiftUI
 
 @main
 struct FlickrApp: App {
+    init() {
+        AppServicesRegistrator.registerAllServices()
+        clearCache()
+        configureNavigationBarAppearance()
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView().task {
-                AppServicesRegistrator.registerAllServices()
-                
-                Task(priority: .high) {
-                    await testApi()
-                }
-            }
+            MainListView()
+                .preferredColorScheme(.dark) // Force Dark Mode for the entire app
         }
     }
-}
-
-func testApi() async {
-    do {
-        @ServiceLocator var flickrService: FlickrService
+    
+    private func clearCache() {
+        @ServiceLocator var cacheService: ImageCacheService
+        Task(priority: .high) {
+            await cacheService.clearCache()
+        }
+    }
+    
+    private func configureNavigationBarAppearance() {
+        let largeBarAppearance = UINavigationBarAppearance()
+        largeBarAppearance.configureWithTransparentBackground()
+        largeBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        largeBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        UINavigationBar.appearance().scrollEdgeAppearance = largeBarAppearance
         
-        let result = try await flickrService.search(
-            for: "cat",
-            page: 1,
-            perPage: AppSettings.photosPerPage
-        )
-        
-        @ServiceLocator var photoService: PhotoService
-        
-        await withTaskGroup(of: Void.self) { [photoService] group in
-            for photo in result.photo {
-                group.addTask {
-                    let image = await photoService.loadImage(for: photo, size: AppSettings.photoSize)
-                    print("image: \(photo.id) - \(String(describing: image?.size))")
-                }
-            }
-            
-            for photo in result.photo {
-                photoService.cancelPhotoLoading(for: photo)
-            }
-        } 
-    } catch {
-        print(error)
+        let smallBarAppearance = UINavigationBarAppearance()
+        smallBarAppearance.configureWithDefaultBackground()
+        smallBarAppearance.backgroundEffect = UIBlurEffect(style: .dark)
+        smallBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        smallBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        UINavigationBar.appearance().standardAppearance = smallBarAppearance
     }
 }

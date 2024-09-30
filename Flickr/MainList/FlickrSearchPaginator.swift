@@ -13,26 +13,26 @@ actor FlickrSearchPaginator {
     private(set) var page: Int = 0
     private(set) var searchTerm: String = ""
     private var totalPages: Int?
-    private(set) var isLoading: Bool = false
+    
+    // lock date to time when first page was loaded
+    // this will avoid duplicating photos in next pages when new photo was added on the server
+    private var maxUploadDate = Date()
     
     init(perPage: Int = 20) {
         self.perPage = perPage
     }
     
-    func isNextPage() -> Bool {
+    func isNextPageAvailable() -> Bool {
         guard let totalPages else { return true }
         return page < totalPages
     }
     
     func loadNextPage() async throws -> [PhotoDTO] {
-        guard !isLoading, isNextPage() else { return [] }
-        isLoading = true
-        defer { isLoading = false }
-        
         let pageResponse = try await flickrService.search(
             for: searchTerm,
             page: page + 1,
-            perPage: perPage
+            perPage: perPage,
+            maxUploadDate: maxUploadDate
         )
         page = pageResponse.page
         totalPages = pageResponse.pages
@@ -42,6 +42,7 @@ actor FlickrSearchPaginator {
     func resetPages() {
         page = 0
         totalPages = nil
+        maxUploadDate = Date()
     }
     
     func resetWithSearchTerm(_ searchTerm: String) {
