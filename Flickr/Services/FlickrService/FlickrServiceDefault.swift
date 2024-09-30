@@ -20,12 +20,13 @@ final class FlickrServiceDefault: FlickrService {
     
     // MARK: - Public
     
-    func search(for query: String, page: Int, perPage: Int) async throws -> PageDTO {
+    func search(for query: String, page: Int, perPage: Int, maxUploadDate: Date) async throws -> PageDTO {
         let data = try await httpClient.request(
             requestBuilder.search(
                 query: query,
                 page: page,
-                perPage: perPage
+                perPage: perPage,
+                maxUploadDate: maxUploadDate
             )
         )
         

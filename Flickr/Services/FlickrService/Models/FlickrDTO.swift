@@ -21,12 +21,21 @@ struct PageDTO: Codable {
     let photo: [PhotoDTO]
 }
 
-struct PhotoDTO: Codable, Identifiable {
+struct PhotoDTO: Codable {
+    let iterationId = UUID().uuidString
     let id: String
     let owner: String
     let secret: String
     let server: String
     let title: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case owner
+        case secret
+        case server
+        case title
+    }
 }
 
 // MARK: - Equatable

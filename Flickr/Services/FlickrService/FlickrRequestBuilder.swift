@@ -15,7 +15,7 @@ struct FlickrRequestBuilder {
         self.key = key
     }
     
-    func search(query: String, page: Int, perPage: Int) -> URLRequest {
+    func search(query: String, page: Int, perPage: Int, maxUploadDate: Date) -> URLRequest {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.flickr.com"
@@ -26,6 +26,7 @@ struct FlickrRequestBuilder {
             .init(name: "text", value: query),
             .init(name: "page", value: String(page)),
             .init(name: "per_page", value: String(perPage)),
+            .init(name: "max_upload_date", value: Int(maxUploadDate.timeIntervalSince1970).description),
             .init(name: "format", value: format),
             .init(name: "nojsoncallback", value: "1")
         ]
