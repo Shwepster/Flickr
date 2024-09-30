@@ -17,8 +17,10 @@ struct FlickrApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainListView()
-                .preferredColorScheme(.dark) // Force Dark Mode for the entire app
+            NavigationView {
+                SearchableMainListView()
+            }
+            .preferredColorScheme(.dark) // Force Dark Mode for the entire app
         }
     }
     

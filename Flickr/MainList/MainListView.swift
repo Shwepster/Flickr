@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainListView: View {
-    @StateObject private var viewModel = ViewModel()
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         List {
@@ -54,12 +54,12 @@ struct MainListView: View {
         case .error(let error):
             Text(error)
                 .onTapGesture {
-                    viewModel.search()
+                    // reload
                 }
         }
     }
 }
 
 #Preview {
-    MainListView()
+    MainListView(viewModel: .init())
 }
