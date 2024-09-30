@@ -30,7 +30,7 @@ struct PhotoItemView: View {
                         }
                 }
             } else {
-                Color.app.navyBlue
+                Color.app.lightPurple
                     .overlay {
                         ProgressView()
                             .progressViewStyle(.circular)

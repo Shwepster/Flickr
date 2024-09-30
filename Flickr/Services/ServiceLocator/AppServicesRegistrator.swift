@@ -9,6 +9,7 @@ import Foundation
 
 enum AppServicesRegistrator {
     static func registerAllServices() {
+        registerHistoryStorage()
         registerImageCacheService()
         registerFlickrService()
         registerPhotoService()
@@ -39,12 +40,16 @@ enum AppServicesRegistrator {
         ServiceContainer.register(ImageCacheService.self, factory: ImageCacheService())
     }
     
+    private static func registerHistoryStorage() {
+        ServiceContainer.register(HistoryStorage.self, factory: HistoryStorage())
+    }
+    
     private static func registerPhotoService() {
         ServiceContainer.register(PhotoService.self) {
             @ServiceLocator var flickrService: FlickrService
             
             var service: PhotoLoader = PhotoLoaderRaw(flickrService: flickrService)
-            service = PhotoLoaderCropped(cropSize: AppSettings.photoSize.cgSize, photoLoader: service)
+            service = PhotoLoaderCropped(cropSize: AppSettings.croppSize, photoLoader: service)
             
             @ServiceLocator(.singleton) var cache: ImageCacheService
             service = PhotoLoaderCached(photoLoader: service, cacheService: cache)

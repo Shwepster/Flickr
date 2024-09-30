@@ -18,17 +18,12 @@ extension MainListView {
         // popup error
         private let paginator = FlickrSearchPaginator(perPage: AppSettings.photosPerPage)
         
-        func onAppear() {
-            Task(priority: .high) {
-                await paginator.resetWithSearchTerm("dog")
-                await loadNextPage()
-            }
-        }
+        func onAppear() {}
         
-        // for testing purpose
-        func search() {
+        func onSearch(_ text: String) {
             Task(priority: .high) {
-                await paginator.resetWithSearchTerm("dog")
+                photos.removeAll()
+                await paginator.resetWithSearchTerm(text)
                 await loadNextPage()
             }
         }

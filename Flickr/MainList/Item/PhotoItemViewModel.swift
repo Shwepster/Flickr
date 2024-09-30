@@ -25,7 +25,6 @@ extension PhotoItemView {
         }
         
         deinit {
-            print("deinit")
             photoService.cancelPhotoLoading(for: photo)
         }
         
