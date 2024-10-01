@@ -15,33 +15,47 @@ struct PhotoItemView: View {
     }
     
     var body: some View {
-        Group {
+        ZStack {
             if let image = viewModel.image {
-                GeometryReader { geometry in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(
-                            width: geometry.size.width,
-                            height: geometry.size.height
-                        )
-                        .overlay(alignment: .bottom) {
-                            title
-                        }
-                }
+                imageView(from: image)
+                    .zIndex(1)
             } else {
-                Color.app.lightPurple
-                    .overlay {
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                            .tint(.white)
-                    }
+                loadingView
+                    .zIndex(2) // avoid using 0 index, it messes up animations
             }
         }
         .clipShape(.rect(cornerRadius: 8))
-        .task {
-            viewModel.onCreated()
+        .animation(.easeInOut.speed(2), value: viewModel.image)
+        .transition(.opacity)
+    }
+    
+    @ViewBuilder
+    private func imageView(from image: Image) -> some View {
+        GeometryReader { geometry in
+            image
+                .resizable(resizingMode: .tile)
+                .aspectRatio(contentMode: .fill)
+                .frame(
+                    width: geometry.size.width,
+                    height: geometry.size.height
+                )
+                .background(Color.app.lightPurple)
+                .overlay(alignment: .bottom) {
+                    title
+                }
         }
+    }
+    
+    @ViewBuilder
+    private var loadingView: some View {
+        Color.app.lightPurple
+            .overlay {
+                ProgressView()
+                    .progressViewStyle(.circular)
+            }
+            .task {
+                await viewModel.onCreated()
+            }
     }
     
     @ViewBuilder

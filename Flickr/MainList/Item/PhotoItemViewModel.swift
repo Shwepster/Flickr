@@ -28,22 +28,20 @@ extension PhotoItemView {
             photoService.cancelPhotoLoading(for: photo)
         }
         
-        func onCreated() {
-            Task(priority: .high) {
-                await loadImage()                
-            }
+        func onCreated() async {
+            await loadImage()
         }
         
         private func loadImage() async {
-            let imageTask = Task(priority: .high) { [photo, photoSize, photoService] in
+            let imageTask = Task.detached { [photo, photoSize, photoService] in
                 await photoService.loadImage(for: photo, size: photoSize)
             }
             
             if let uiImage = await imageTask.value {
                 image = Image(uiImage: uiImage)
             } else {
-                image = Image(.placeholder) // default image
-            }            
+                image = Image(systemName: "photo.circle.fill")
+            }
         }
     }
 }

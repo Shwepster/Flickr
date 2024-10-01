@@ -16,27 +16,30 @@ struct MainListView: View {
                 PhotoItemView(photo: photo)
                     .aspectRatio(1/1, contentMode: .fit)
             }
-            .listRowBackground(Color.app.background)
             .listRowSeparator(.hidden)
+            .listRowBackground(Color.app.background)
             
             loadingItem
-                .listRowBackground(EmptyView())
+                .frame(height: 50, alignment: .center)
+                .frame(maxWidth: .infinity)
+                .listRowBackground(Color.app.background)
+                .listRowSeparator(.hidden)
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(Color.app.background)
+        .animation(.easeInOut.speed(2), value: viewModel.photos)
+        .refreshable {
+            await viewModel.refresh()
+        }
     }
     
     @ViewBuilder
     private var progressView: some View {
-        HStack {
-            Spacer()
-            ProgressView()
-                .scaleEffect(2)
-                .progressViewStyle(CircularProgressViewStyle())
-                .tint(.white)
-            Spacer()
-        }
+        ProgressView()
+            .scaleEffect(1.5)
+            .progressViewStyle(CircularProgressViewStyle())
+            .id(UUID())
     }
     
     @ViewBuilder
@@ -45,16 +48,20 @@ struct MainListView: View {
         case .loading:
             progressView
         case .idle:
-            progressView
+            Color.clear
                 .onAppear {
-                    viewModel.onPaginate()
+                    Task {
+                        await viewModel.onPaginate()
+                    }
                 }
         case .allPagesLoaded:
             EmptyView()
         case .error(let error):
             Text(error)
                 .onTapGesture {
-                    // reload
+                    Task {
+                        await viewModel.refresh()
+                    }
                 }
         }
     }

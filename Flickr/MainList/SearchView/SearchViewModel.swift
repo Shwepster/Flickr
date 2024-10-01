@@ -30,12 +30,14 @@ extension SearchableMainListView {
         }
         
         func search() {
-            listViewModel.onSearch(searchText)
-
-            guard searchText.isNotEmpty else { return }
-            let item = HistoryItem(id: UUID().uuidString, text: searchText)
-            storage.store(item)
-            syncHistory()
+            Task {
+                await listViewModel.onSearch(searchText)
+                
+                guard searchText.trimmingCharacters(in: .whitespacesAndNewlines).isNotEmpty else { return }
+                let item = HistoryItem(id: UUID().uuidString, text: searchText)
+                storage.store(item)
+                syncHistory()
+            }
         }
         
         // MARK: - Helpers
