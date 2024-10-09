@@ -123,7 +123,7 @@ final class FlickrServiceDefaultTests: XCTestCase {
         urlSession.setRequestDelayTime(delay)
         
         let task = Task<PageDTO, Error> { [service] in
-            try await service!.search(for: "test", page: 1, perPage: 1)
+            try await service!.search(for: "test", page: 1, perPage: 1, maxUploadDate: Date())
         }
         
         do {
@@ -146,7 +146,7 @@ final class FlickrServiceDefaultTests: XCTestCase {
     
     private func searchWithExpectedSuccess(expectedResponse: PhotosResponseDTO) async {
         do {
-            let result = try await service.search(for: "test", page: 1, perPage: 1)
+            let result = try await service.search(for: "test", page: 1, perPage: 1, maxUploadDate: Date())
             XCTAssertEqual(result, expectedResponse.photos)
         } catch {
             XCTFail("Search failed with error: \(error)")
@@ -155,7 +155,7 @@ final class FlickrServiceDefaultTests: XCTestCase {
     
     private func searchWithExpectedError<T: Error>(_ expectedError: T) async where T: Equatable {
         do {
-            let _ = try await service.search(for: "test", page: 1, perPage: 1)
+            let _ = try await service.search(for: "test", page: 1, perPage: 1, maxUploadDate: Date())
             XCTFail("Should have thrown an error")
         } catch {
             XCTAssertEqual(

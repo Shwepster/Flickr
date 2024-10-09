@@ -9,9 +9,11 @@ import XCTest
 @testable import Flickr
 
 final class FlickrSearchPaginatorTests: XCTestCase {
-    private var paginator: FlickrSearchPaginator!
+    private var paginator: FlickrSearchPaginationController!
     private var urlSession: URLSessionMock!
     private let pageSize = 10
+    
+    // MARK: - Setup
     
     override func setUp() {
         urlSession = URLSessionMock()
@@ -20,7 +22,7 @@ final class FlickrSearchPaginatorTests: XCTestCase {
     
     private func setupRealPaginator() {
         AppServicesRegistrator.registerAllServices()
-        paginator = FlickrSearchPaginator(perPage: pageSize)
+        paginator = FlickrSearchPaginationControllerDefault(perPage: pageSize)
     }
     
     private func setupMockPaginator() {
@@ -29,7 +31,7 @@ final class FlickrSearchPaginatorTests: XCTestCase {
             requestBuilder: .init(key: "test_key")
         )
         ServiceContainer.register(FlickrService.self) { flickrService }
-        paginator = FlickrSearchPaginator(perPage: pageSize)
+        paginator = FlickrSearchPaginationControllerDefault(perPage: pageSize)
     }
     
     override func tearDown() {
@@ -37,54 +39,60 @@ final class FlickrSearchPaginatorTests: XCTestCase {
         urlSession = nil
         AppServicesRegistrator.unregisterAllServices()
     }
+    
+    // MARK: - Tests
 
     func testLoadingNextPage() async throws {
-        await paginator.resetWithSearchTerm("cat")
+        paginator.resetWithNewSearchTerm("cat")
         let result = try await paginator.loadNextPage()
         
-        let page = await paginator.page
-        XCTAssertEqual(page, 1, "Page should be incremented")
+        XCTAssertEqual(paginator.page, 1, "Page should be incremented")
         XCTAssertEqual(result.count, pageSize, "Page should contain 10 photos")
     }
     
     func testLoadingTwoPages() async throws {
-        await paginator.resetWithSearchTerm("cat")
+        paginator.resetWithNewSearchTerm("cat")
         let result1 = try await paginator.loadNextPage()
         let result2 = try await paginator.loadNextPage()
         
-        let page = await paginator.page
-        XCTAssertEqual(page, 2, "Page should be incremented two times")
+        XCTAssertEqual(paginator.page, 2, "Page should be incremented two times")
         XCTAssertEqual(result1.count, pageSize, "Page 1 should contain 10 photos")
         XCTAssertEqual(result2.count, pageSize, "Page 2 should contain 10 photos")
         XCTAssertNotEqual(result1.first?.id, result2.first?.id, "Photos should be different")
     }
     
+    /// Can fail if new photo was added to API before result2 executes
     func testPagesReset() async throws {
-        await paginator.resetWithSearchTerm("cat")
+        paginator.resetWithNewSearchTerm("cat")
         
         let result1 = try await paginator.loadNextPage()
         let _       = try await paginator.loadNextPage()
         
-        await paginator.resetPages()
-        let page = await paginator.page
-        XCTAssertEqual(page, 0, "Page should be reset to 0")
+        paginator.resetPages()
+        XCTAssertEqual(paginator.page, 0, "Page should be reset to 0")
         
         let result2 = try await paginator.loadNextPage()
         XCTAssertEqual(result1.first?.id, result2.first?.id, "Photos should same")
     }
     
     func testSearchTermChange() async throws {
-        await paginator.resetWithSearchTerm("cat")
+        let firstTerm = "cat"
+        let secondTerm = "dog"
+
+        paginator.resetWithNewSearchTerm(firstTerm)
+        XCTAssertEqual(paginator.searchTerm, firstTerm, "Search term should be same")
+        
         let result1 = try await paginator.loadNextPage()
         
-        await paginator.resetWithSearchTerm("dog")
-        let page = await paginator.page
-        XCTAssertEqual(page, 0, "Page should be reset to 0")
+        paginator.resetWithNewSearchTerm(secondTerm)
+        XCTAssertEqual(paginator.searchTerm, secondTerm, "Search term should be different")
+        XCTAssertEqual(paginator.page, 0, "Page should be reset to 0")
        
         let result2 = try await paginator.loadNextPage()
         XCTAssertNotEqual(result1.first?.id, result2.first?.id, "Photos should be different")
     }
     
+    // sometimes flicker API can disable empty search terms
     func testLoadingWithoutSearchTerm() async {
         await loadNextWithExpectedError(FlickrError.noSearchTerm)
         

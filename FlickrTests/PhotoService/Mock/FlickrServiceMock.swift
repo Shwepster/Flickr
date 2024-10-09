@@ -17,6 +17,23 @@ final class FlickrServiceMock: FlickrService, @unchecked Sendable {
     var failAfterRequestCount: Int?
     let requestCount: Atomic<Int> = .init(0)
     
+    func search(for query: String, page: Int, perPage: Int, maxUploadDate: Date) async throws -> PageDTO {
+        try await mockRequest(returnObject: pageDTO)
+    }
+    
+    func loadImageData(for photo: PhotoDTO, size: PhotoSize) async throws -> Data {
+        try await mockRequest(returnObject: data)
+    }
+    
+    func reset() {
+        data = nil
+        pageDTO = nil
+        error = nil
+        delay = 0
+        failAfterRequestCount = nil
+        requestCount.store(0, ordering: .sequentiallyConsistent)
+    }
+    
     private func mockRequest<T>(returnObject: T?) async throws -> T {
         let count = requestCount.add(1, ordering: .acquiringAndReleasing).newValue
         if let failAfterRequestCount, count > failAfterRequestCount {
@@ -32,23 +49,6 @@ final class FlickrServiceMock: FlickrService, @unchecked Sendable {
         if let returnObject { return returnObject }
         
         throw MockError.noData
-    }
-    
-    func search(for query: String, page: Int, perPage: Int) async throws -> PageDTO {
-        try await mockRequest(returnObject: pageDTO)
-    }
-    
-    func loadImageData(for photo: PhotoDTO, size: PhotoSize) async throws -> Data {
-        try await mockRequest(returnObject: data)
-    }
-    
-    func reset() {
-        data = nil
-        pageDTO = nil
-        error = nil
-        delay = 0
-        failAfterRequestCount = nil
-        requestCount.store(0, ordering: .sequentiallyConsistent)
     }
 }
 

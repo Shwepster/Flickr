@@ -49,14 +49,16 @@ final class FlickrRequestBuilderTests: XCTestCase {
     private func testSearchRequest(searchTerm: String) {
         let page = 1
         let perPage = 10
+        let date = Date()
         let expectedURL = URL(
             string: "https://api.flickr.com/services/rest/"
             + "?method=flickr.photos.search&api_key=\(key)"
             + "&text=\(searchTerm)&page=\(page)&per_page=\(perPage)"
+            + "&max_upload_date=\(Int(date.timeIntervalSince1970).description)"
             + "&format=json&nojsoncallback=1"
         )!
         
-        let request = builder.search(query: searchTerm, page: page, perPage: perPage)
+        let request = builder.search(query: searchTerm, page: page, perPage: perPage, maxUploadDate: date)
         XCTAssertNotNil(request.url, "Request URL should not be nil")
         XCTAssertEqual(request.url, expectedURL, "The constructed URL should match the expected URL")
     }
