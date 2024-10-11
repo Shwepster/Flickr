@@ -12,28 +12,36 @@ struct EditorView: View {
     
     var body: some View {
         VStack {
-            Color.white
-                .opacity(0.1)
-                .overlay {
-                    viewModel.editedImage
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding(8)
-                }
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .padding(.horizontal)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    viewModel.onModify()
-                }
-            
+            editorImage
+            HStack {
+                Slider(value: $viewModel.hueRotation, in: viewModel.angleRange)
+                Text(viewModel.hueRotation.rounded().formatted())
+                    .monospaced()
+                    .frame(width: 33, alignment: .center)
+            }
+
             buttons
         }
-        .padding(.vertical)
+        .padding()
         .background(Color.app.background)
     }
     
-    @ViewBuilder private var buttons: some View {
+    @ViewBuilder
+    private var editorImage: some View {
+        Color.white
+            .opacity(0.1)
+            .overlay {
+                viewModel.editedImage
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .hueRotation(.degrees(viewModel.hueRotation))
+                    .padding(8)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+    
+    @ViewBuilder
+    private var buttons: some View {
         Button {
             viewModel.onSave()
         } label: {
@@ -43,7 +51,6 @@ struct EditorView: View {
         }
         .buttonStyle(.bordered)
         .controlSize(.mini)
-        .padding(.horizontal)
     }
 }
 

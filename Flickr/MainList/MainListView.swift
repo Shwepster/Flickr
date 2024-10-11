@@ -33,7 +33,7 @@ struct MainListView: View {
         }
         .sheet(item: $viewModel.photoEditorViewModel) { viewModel in
             EditorView(viewModel: viewModel)
-                .presentationDetents(.init([.medium]))
+                .presentationDetents(.init([.fraction(0.7)]))
         }
         .alert(isPresented: $viewModel.errorModel.isErrorPresented, error: viewModel.errorModel.errorMessage) {
             Button("Retry") {
