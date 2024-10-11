@@ -12,6 +12,8 @@ extension EditorView {
     @MainActor
     final class ViewModel: ObservableObject, Identifiable {
         @Published var editedImage: Image
+        @Published var hueRotation = 0.0
+        let angleRange = 0.0...360
         let photoViewModel: PhotoItemView.ViewModel
         let id = UUID().uuidString
         private let onSaveCallback: () -> Void
@@ -23,18 +25,15 @@ extension EditorView {
         }
         
         func onSave() {
-            photoViewModel.image = editedImage
-            onSaveCallback()
-        }
-        
-        func onModify() {
             let uiImage = editedImage
-                .hueRotation(.degrees(Double.random(in: 30...330)))
+                .hueRotation(.degrees(hueRotation))
                 .asUIImage()
             
             if let uiImage {
-                editedImage = Image(uiImage: uiImage)
+                photoViewModel.image = Image(uiImage: uiImage)
             }
+            
+            onSaveCallback()
         }
     }
 }

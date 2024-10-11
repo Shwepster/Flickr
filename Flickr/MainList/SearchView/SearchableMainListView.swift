@@ -63,8 +63,10 @@ struct SearchableMainListView: View {
     @ViewBuilder
     private var emptyHistoryView: some View {
         Text("No history yet")
-            .font(.title2)
+            .font(.subheadline)
             .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity)
+            .padding()
     }
     
     @ViewBuilder
