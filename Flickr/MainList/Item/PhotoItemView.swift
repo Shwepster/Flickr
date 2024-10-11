@@ -36,14 +36,6 @@ struct PhotoItemView: View {
     private var topBar: some View {
         VStack {
             HStack {
-                Button {
-                    viewModel.onEdit()
-                } label: {
-                    Image(systemName: "pencil")
-                        .barImageModifier()
-                }
-                .buttonStyle(.borderless)
-                
                 Spacer()
                 
                 Button {
@@ -74,6 +66,10 @@ struct PhotoItemView: View {
                     if viewModel.title.isNotEmpty {
                         title
                     }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    viewModel.onEdit()
                 }
         }
     }

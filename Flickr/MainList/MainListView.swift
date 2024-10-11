@@ -20,7 +20,6 @@ struct MainListView: View {
             .listRowBackground(Color.app.background)
             
             loadingItem
-                .frame(height: 50, alignment: .center)
                 .frame(maxWidth: .infinity)
                 .listRowBackground(Color.app.background)
                 .listRowSeparator(.hidden)
@@ -35,6 +34,13 @@ struct MainListView: View {
         .sheet(item: $viewModel.photoEditorViewModel) { viewModel in
             EditorView(viewModel: viewModel)
                 .presentationDetents(.init([.medium]))
+        }
+        .alert(isPresented: $viewModel.errorModel.isErrorPresented, error: viewModel.errorModel.errorMessage) {
+            Button("Retry") {
+                Task {
+                    await viewModel.refresh()
+                }
+            }
         }
     }
     
@@ -51,6 +57,7 @@ struct MainListView: View {
         switch viewModel.state {
         case .loading:
             progressView
+                .frame(height: 50, alignment: .center)
         case .idle:
             Color.clear
                 .onAppear {
@@ -61,12 +68,28 @@ struct MainListView: View {
         case .allPagesLoaded:
             EmptyView()
         case .error(let error):
+            errorView(error: error)
+        }
+    }
+    
+    @ViewBuilder
+    private func errorView(error: String) -> some View {
+        VStack(spacing: 12) {
             Text(error)
-                .onTapGesture {
-                    Task {
-                        await viewModel.refresh()
-                    }
-                }
+                .font(.subheadline)
+            Text("Tap to retry")
+                .font(.headline)
+            Spacer()
+        }
+        .padding(.vertical, 100)
+        .foregroundStyle(.secondary)
+        .frame(maxWidth: .infinity)
+        .frame(height: viewModel.photoViewModels.isEmpty ? UIScreen.main.bounds.height : 100)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            Task {
+                await viewModel.refresh()
+            }
         }
     }
 }
