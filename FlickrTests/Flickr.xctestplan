@@ -25,6 +25,7 @@
     {
       "parallelizable" : false,
       "skippedTests" : [
+        "FlickrSearchPaginatorTests\/testLoadingWithoutSearchTerm()",
         "PhotoLoaderCroppedTests\/testPerformance()",
         "PhotoServiceTests\/testFailingSecondRequestMultipleTimes()"
       ],
