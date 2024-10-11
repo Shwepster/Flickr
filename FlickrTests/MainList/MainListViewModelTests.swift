@@ -16,6 +16,7 @@ final class MainListViewModelTests: XCTestCase {
     private var stateListener: AnyCancellable?
 
     override func setUp() async throws {
+        AppServicesRegistrator.registerAllServices()
         paginationController = FlickrSearchPaginationControllerMock()
         viewModel = .init(paginationController: paginationController)
     }
@@ -60,7 +61,7 @@ final class MainListViewModelTests: XCTestCase {
         await viewModel.onSearch("cat")
         await viewModel.onPaginate()
         XCTAssertEqual(
-            viewModel.photos.map(\.photoId),
+            viewModel.photoViewModels.map(\.photoId),
             (PhotoDTO.mocks + PhotoDTO.mocks).map(\.id),
             "Must have loaded photos two times"
         )
@@ -91,7 +92,7 @@ final class MainListViewModelTests: XCTestCase {
                        "Refresh should transition to loading and then back to idle")
         
         XCTAssertEqual(
-            viewModel.photos.map(\.photoId),
+            viewModel.photoViewModels.map(\.photoId),
             newPhotos.map(\.id),
             "New photos must replace old ones"
         )
@@ -142,12 +143,12 @@ final class MainListViewModelTests: XCTestCase {
         
         await viewModel.onSearch(first)
         paginationController.page = 2
-        XCTAssertEqual(viewModel.photos.count, firstPhotosBatch.count, "Must have loaded photos")
+        XCTAssertEqual(viewModel.photoViewModels.count, firstPhotosBatch.count, "Must have loaded photos")
         
         paginationController.photos = [.mock2]
         await viewModel.onSearch(second)
         XCTAssertEqual(
-            viewModel.photos.map(\.photoId),
+            viewModel.photoViewModels.map(\.photoId),
             secondPhotosBatch.map(\.id),
             "Old photos must be replaced by new one photo"
         )

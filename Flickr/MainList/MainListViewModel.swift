@@ -10,8 +10,9 @@ import Foundation
 extension MainListView {
     @MainActor
     final class ViewModel: ObservableObject {
-        @Published var photos: [PhotoItemView.ViewModel] = []
+        @Published var photoViewModels: [PhotoItemView.ViewModel] = []
         @Published var state: State = .idle
+        @Published var photoEditorViewModel: EditorView.ViewModel?
         //TODO: add popup error
         private let paginationController: FlickrSearchPaginationController
         
@@ -27,7 +28,7 @@ extension MainListView {
         }
         
         func onSearch(_ text: String) async {
-            photos.removeAll()
+            photoViewModels.removeAll()
             paginationController.resetWithNewSearchTerm(text)
             await loadNextPage(replacePhotos: true)
         }
@@ -49,9 +50,9 @@ extension MainListView {
                 let photos = createViewModels(from: photosDTO)
                 
                 if replacePhotos {
-                    self.photos = photos
+                    self.photoViewModels = photos
                 } else {
-                    self.photos.append(contentsOf: photos)
+                    self.photoViewModels.append(contentsOf: photos)
                 }
                 state = paginationController.isNextPageAvailable() ? .idle : .allPagesLoaded
             } catch {
@@ -63,18 +64,18 @@ extension MainListView {
         
         private func createViewModels(from models: [PhotoDTO]) -> [PhotoItemView.ViewModel] {
             models.map { photo in
-                PhotoItemView.ViewModel(photo: photo) { [weak self] in
-                    self?.deletePhoto(photo)
+                PhotoItemView.ViewModel(photo: photo) { [weak self] viewModel in
+                    self?.deletePhoto(viewModel: viewModel)
+                } onEdit: { [weak self] viewModel in
+                    self?.photoEditorViewModel = EditorView.ViewModel(photoViewModel: viewModel) { [weak self] in
+                        self?.photoEditorViewModel = nil
+                    }
                 }
             }
         }
         
-        private func deletePhoto(_ photo: PhotoDTO) {
-            let index = photos.firstIndex { $0.photoId == photo.id }
-            
-            if let index {
-                photos.remove(at: index)
-            }
+        private func deletePhoto(viewModel: PhotoItemView.ViewModel) {
+            photoViewModels.removeAll { $0 == viewModel }
         }
         
         // MARK: Error handling
@@ -84,6 +85,8 @@ extension MainListView {
         }
     }
 }
+
+// MARK: - State
 
 extension MainListView.ViewModel {
     enum State: Equatable {
