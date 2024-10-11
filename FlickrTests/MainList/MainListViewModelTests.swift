@@ -59,7 +59,11 @@ final class MainListViewModelTests: XCTestCase {
         paginationController.photos = PhotoDTO.mocks
         await viewModel.onSearch("cat")
         await viewModel.onPaginate()
-        XCTAssertEqual(viewModel.photos, PhotoDTO.mocks + PhotoDTO.mocks, "Must have loaded photos two times")
+        XCTAssertEqual(
+            viewModel.photos.map(\.photoId),
+            (PhotoDTO.mocks + PhotoDTO.mocks).map(\.id),
+            "Must have loaded photos two times"
+        )
     }
     
     func testPaginationEnd() async {
@@ -86,7 +90,11 @@ final class MainListViewModelTests: XCTestCase {
         XCTAssertEqual(receivedStates, [.idle, .loading, .idle],
                        "Refresh should transition to loading and then back to idle")
         
-        XCTAssertEqual(viewModel.photos, newPhotos, "New photos must replace old ones")
+        XCTAssertEqual(
+            viewModel.photos.map(\.photoId),
+            newPhotos.map(\.id),
+            "New photos must replace old ones"
+        )
         XCTAssertEqual(paginationController.page, 0, "Page must be reset")
     }
     
@@ -138,7 +146,11 @@ final class MainListViewModelTests: XCTestCase {
         
         paginationController.photos = [.mock2]
         await viewModel.onSearch(second)
-        XCTAssertEqual(viewModel.photos, secondPhotosBatch, "Old photos must be replaced by new one photo")
+        XCTAssertEqual(
+            viewModel.photos.map(\.photoId),
+            secondPhotosBatch.map(\.id),
+            "Old photos must be replaced by new one photo"
+        )
         XCTAssertEqual(paginationController.page, 0, "Page must be reset")
     }
 }

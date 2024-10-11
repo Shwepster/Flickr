@@ -10,13 +10,20 @@ import SwiftUI
 extension PhotoItemView {
     @MainActor
     final class ViewModel: ObservableObject {
-        nonisolated private let photoService: PhotoService
-        nonisolated let photo: PhotoDTO
-        private let photoSize = AppSettings.photoSize
         @Published var image: Image?
+        let title: String
+        nonisolated var photoId: String { photo.id }
+        nonisolated var id: String { photo.iterationId }
+        nonisolated private let photo: PhotoDTO
+        nonisolated private let photoService: PhotoService
+        private let photoSize = AppSettings.photoSize
+        private let onDeleteCallback: () -> Void
         
-        init(photo: PhotoDTO) {
+        init(photo: PhotoDTO, onDelete: @escaping () -> Void = {}) {
             self.photo = photo
+            self.onDeleteCallback = onDelete
+            self.title = (photo.title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            
             do {
                 photoService = try ServiceContainer.resolve(lifetime: .singleton)
             } catch {
@@ -26,11 +33,20 @@ extension PhotoItemView {
         
         deinit {
             photoService.cancelPhotoLoading(for: photo)
+            print("Photo item view model deinitialized")
         }
         
         func onCreated() async {
-            await loadImage()
+            if image == nil {
+                await loadImage()
+            }
         }
+        
+        func onDelete() {
+            onDeleteCallback()
+        }
+        
+        // MARK: - Private
         
         private func loadImage() async {
             let imageTask = Task.detached { [photo, photoSize, photoService] in
@@ -43,5 +59,11 @@ extension PhotoItemView {
                 image = Image(systemName: "photo.circle.fill")
             }
         }
+    }
+}
+
+extension PhotoItemView.ViewModel: Equatable {
+    nonisolated public static func == (lhs: PhotoItemView.ViewModel, rhs: PhotoItemView.ViewModel) -> Bool {
+        lhs.id == rhs.id
     }
 }

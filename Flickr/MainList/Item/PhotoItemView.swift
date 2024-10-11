@@ -8,11 +8,7 @@
 import SwiftUI
 
 struct PhotoItemView: View {
-    @StateObject private var viewModel: ViewModel
-    
-    init(photo: PhotoDTO) {
-        _viewModel = .init(wrappedValue: ViewModel(photo: photo))
-    }
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         ZStack {
@@ -23,10 +19,39 @@ struct PhotoItemView: View {
                 loadingView
                     .zIndex(2) // avoid using 0 index, it messes up animations
             }
+            
+            topBar.zIndex(3)
         }
         .clipShape(.rect(cornerRadius: 8))
         .animation(.easeInOut.speed(2), value: viewModel.image)
         .transition(.opacity)
+        .task {
+            await viewModel.onCreated()
+        }
+    }
+    
+    // MARK: - Subviews
+    
+    @ViewBuilder
+    private var topBar: some View {
+        VStack {
+            HStack {
+                Spacer()
+                
+                Button {
+                    viewModel.onDelete()
+                } label: {
+                    Image(systemName: "trash")
+                        .padding(10)
+                        .background(Color.app.background)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .padding(8)
+                }
+                .buttonStyle(.borderless)
+            }
+            
+            Spacer()
+        }
     }
     
     @ViewBuilder
@@ -41,7 +66,9 @@ struct PhotoItemView: View {
                 )
                 .background(Color.app.lightPurple)
                 .overlay(alignment: .bottom) {
-                    title
+                    if viewModel.title.isNotEmpty {
+                        title
+                    }
                 }
         }
     }
@@ -53,27 +80,28 @@ struct PhotoItemView: View {
                 ProgressView()
                     .progressViewStyle(.circular)
             }
-            .task {
-                await viewModel.onCreated()
-            }
     }
     
     @ViewBuilder
     private var title: some View {
         VStack {
             Spacer()
-            Text(viewModel.photo.title ?? "Default title")
+            Text(viewModel.title)
                 .bold()
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 4)
+                .padding(.vertical, 10)
                 .background(.black.opacity(0.5))
         }
     }
 }
 
+// MARK: - Preview
+
 #Preview {
-    PhotoItemView(photo: .init(id: "1", owner: "2", secret: "3", server: "4", title: "5"))
+    @Previewable @StateObject var viewModel: PhotoItemView.ViewModel = .init(photo: .test)
+    
+    PhotoItemView(viewModel: viewModel)
         .aspectRatio(contentMode: .fit)
         .frame(height: 500)
 }

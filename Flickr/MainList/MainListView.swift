@@ -12,8 +12,8 @@ struct MainListView: View {
     
     var body: some View {
         List {
-            ForEach(viewModel.photos, id: \.iterationId) { photo in
-                PhotoItemView(photo: photo)
+            ForEach(viewModel.photos, id: \.id) { viewModel in
+                PhotoItemView(viewModel: viewModel)
                     .aspectRatio(1/1, contentMode: .fit)
             }
             .listRowSeparator(.hidden)
