@@ -10,7 +10,7 @@ import Foundation
 extension MainListView {
     @MainActor
     final class ViewModel: ObservableObject {
-        @Published var photos: [PhotoDTO] = []
+        @Published var photos: [PhotoItemView.ViewModel] = []
         @Published var state: State = .idle
         //TODO: add popup error
         private let paginationController: FlickrSearchPaginationController
@@ -36,13 +36,17 @@ extension MainListView {
             await loadNextPage()
         }
         
+        // MARK: - Private
+        
         private func loadNextPage(replacePhotos: Bool = false) async {
             state = .loading
             
             do {
-                let photos = try await Task { [paginationController] in
+                let photosDTO = try await Task { [paginationController] in
                     try await paginationController.loadNextPage()
                 }.value
+                
+                let photos = createViewModels(from: photosDTO)
                 
                 if replacePhotos {
                     self.photos = photos
@@ -54,6 +58,22 @@ extension MainListView {
                 let metadata = ErrorMetadata(error: error)                
                 state = .error(metadata.message)
                 metadata.source == .api ? showPopupError(metadata.message) : ()
+            }
+        }
+        
+        private func createViewModels(from models: [PhotoDTO]) -> [PhotoItemView.ViewModel] {
+            models.map { photo in
+                PhotoItemView.ViewModel(photo: photo) { [weak self] in
+                    self?.deletePhoto(photo)
+                }
+            }
+        }
+        
+        private func deletePhoto(_ photo: PhotoDTO) {
+            let index = photos.firstIndex { $0.photoId == photo.id }
+            
+            if let index {
+                photos.remove(at: index)
             }
         }
         

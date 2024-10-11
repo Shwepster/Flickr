@@ -38,6 +38,12 @@ struct PhotoDTO: Codable {
     }
 }
 
+extension PhotoDTO {
+    static var test: Self {
+        .init(id: "1", owner: "2", secret: "3", server: "4", title: "Test Title")
+    }
+}
+
 // MARK: - Equatable
 
 extension PhotoDTO: Equatable {
