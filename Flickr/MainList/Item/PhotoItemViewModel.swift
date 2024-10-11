@@ -10,6 +10,7 @@ import SwiftUI
 extension PhotoItemView {
     @MainActor
     final class ViewModel: ObservableObject {
+        typealias ViewModel = PhotoItemView.ViewModel
         @Published var image: Image?
         let title: String
         nonisolated var photoId: String { photo.id }
@@ -17,11 +18,17 @@ extension PhotoItemView {
         nonisolated private let photo: PhotoDTO
         nonisolated private let photoService: PhotoService
         private let photoSize = AppSettings.photoSize
-        private let onDeleteCallback: () -> Void
+        private let onDeleteCallback: (ViewModel) -> Void
+        private let onEditCallback: (ViewModel) -> Void
         
-        init(photo: PhotoDTO, onDelete: @escaping () -> Void = {}) {
+        init(
+            photo: PhotoDTO,
+            onDelete: @escaping (ViewModel) -> Void = { _ in },
+            onEdit: @escaping (ViewModel) -> Void = { _ in }
+        ) {
             self.photo = photo
             self.onDeleteCallback = onDelete
+            self.onEditCallback = onEdit
             self.title = (photo.title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
             
             do {
@@ -42,8 +49,12 @@ extension PhotoItemView {
             }
         }
         
+        func onEdit() {
+            onEditCallback(self)
+        }
+        
         func onDelete() {
-            onDeleteCallback()
+            onDeleteCallback(self)
         }
         
         // MARK: - Private

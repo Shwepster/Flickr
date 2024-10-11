@@ -36,16 +36,21 @@ struct PhotoItemView: View {
     private var topBar: some View {
         VStack {
             HStack {
+                Button {
+                    viewModel.onEdit()
+                } label: {
+                    Image(systemName: "pencil")
+                        .barImageModifier()
+                }
+                .buttonStyle(.borderless)
+                
                 Spacer()
                 
                 Button {
                     viewModel.onDelete()
                 } label: {
                     Image(systemName: "trash")
-                        .padding(10)
-                        .background(Color.app.background)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .padding(8)
+                        .barImageModifier()
                 }
                 .buttonStyle(.borderless)
             }
@@ -58,7 +63,7 @@ struct PhotoItemView: View {
     private func imageView(from image: Image) -> some View {
         GeometryReader { geometry in
             image
-                .resizable(resizingMode: .tile)
+                .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(
                     width: geometry.size.width,
@@ -93,6 +98,17 @@ struct PhotoItemView: View {
                 .padding(.vertical, 10)
                 .background(.black.opacity(0.5))
         }
+    }
+}
+
+// MARK: - Image modifier
+
+fileprivate extension Image {
+    func barImageModifier() -> some View {
+        self.padding(10)
+            .background(Color.app.background)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .padding(8)
     }
 }
 

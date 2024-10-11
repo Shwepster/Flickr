@@ -12,7 +12,7 @@ struct MainListView: View {
     
     var body: some View {
         List {
-            ForEach(viewModel.photos, id: \.id) { viewModel in
+            ForEach(viewModel.photoViewModels, id: \.id) { viewModel in
                 PhotoItemView(viewModel: viewModel)
                     .aspectRatio(1/1, contentMode: .fit)
             }
@@ -28,9 +28,13 @@ struct MainListView: View {
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(Color.app.background)
-        .animation(.easeInOut.speed(2), value: viewModel.photos)
+        .animation(.easeInOut.speed(2), value: viewModel.photoViewModels)
         .refreshable {
             await viewModel.refresh()
+        }
+        .sheet(item: $viewModel.photoEditorViewModel) { viewModel in
+            EditorView(viewModel: viewModel)
+                .presentationDetents(.init([.medium]))
         }
     }
     
