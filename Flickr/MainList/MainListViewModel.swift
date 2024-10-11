@@ -13,7 +13,7 @@ extension MainListView {
         @Published var photoViewModels: [PhotoItemView.ViewModel] = []
         @Published var state: State = .idle
         @Published var photoEditorViewModel: EditorView.ViewModel?
-        //TODO: add popup error
+        @Published var errorModel = ErrorModel()
         private let paginationController: FlickrSearchPaginationController
         
         init(paginationController: FlickrSearchPaginationController = FlickrSearchPaginationControllerDefault(
@@ -58,7 +58,10 @@ extension MainListView {
             } catch {
                 let metadata = ErrorMetadata(error: error)                
                 state = .error(metadata.message)
-                metadata.source == .api ? showPopupError(metadata.message) : ()
+                
+                if metadata.source == .authentication {
+                    errorModel.presentError(metadata.message)
+                }
             }
         }
         
@@ -77,11 +80,24 @@ extension MainListView {
         private func deletePhoto(viewModel: PhotoItemView.ViewModel) {
             photoViewModels.removeAll { $0 == viewModel }
         }
+    }
+}
+
+extension MainListView.ViewModel {
+    struct ErrorModel {
+        var isErrorPresented = false {
+            didSet {
+                if oldValue == true, isErrorPresented == false {
+                    errorMessage = nil
+                }
+            }
+        }
         
-        // MARK: Error handling
+        private(set) var errorMessage: String?
         
-        private func showPopupError(_ error: String) {
-            print("Popup error: \(error)")
+        mutating func presentError(_ error: String) {
+            errorMessage = error
+            isErrorPresented = true
         }
     }
 }
