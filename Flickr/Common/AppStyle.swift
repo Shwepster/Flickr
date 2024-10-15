@@ -20,6 +20,10 @@ enum AppStyle {
         .purple.mix(with: .black, by: 0.4)
     }
     
+    static var extraLightPurple: Color {
+        .purple.mix(with: .white, by: 0.4)
+    }
+    
     static var navyBlue: Color {
         .blue.mix(with: .black, by: 0.5)
     }
