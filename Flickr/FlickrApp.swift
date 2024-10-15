@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct FlickrApp: App {
+    @StateObject private var viewModel = ViewModel()
+    
     init() {
         AppServicesRegistrator.registerAllServices()
         clearCache()
@@ -17,9 +19,16 @@ struct FlickrApp: App {
     
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                SearchableMainListView()
+            Group {
+                if let viewModel = viewModel.onboardingVM {
+                    OnboardingView(viewModel: viewModel)
+                } else {
+                    NavigationView {
+                        SearchableMainListView()
+                    }
+                }
             }
+            .animation(.smooth, value: viewModel.onboardingVM == nil)
             .preferredColorScheme(.dark) // Force Dark Mode for the entire app
         }
     }
