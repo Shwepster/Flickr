@@ -17,7 +17,7 @@ struct EditorView: View {
                 Slider(value: $viewModel.hueRotation, in: viewModel.angleRange)
                 Text(viewModel.hueRotation.rounded().formatted())
                     .monospaced()
-                    .frame(width: 33, alignment: .center)
+                    .frame(width: 40, alignment: .center)
             }
 
             buttons
