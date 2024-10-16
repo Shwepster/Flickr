@@ -14,9 +14,9 @@ extension OnboardingView {
         @Published private(set) var currentPage: OnboardingPageType
         private var currentPageNumber: Int = 0
         private let datasource: OnboardingDatasource
-        private let onPurchase: () -> Void
+        private let onPurchase: Callback
         
-        init(datasource: OnboardingDatasource, onPurchase: @escaping () -> Void = {}) {
+        init(datasource: OnboardingDatasource, onPurchase: @escaping Callback = {}) {
             self.datasource = datasource
             self.onPurchase = onPurchase
             self.currentPage = datasource.pages.first!
@@ -25,7 +25,7 @@ extension OnboardingView {
         func onContinueTapped() {
             switch buttonState {
             case .continue:
-                handleContinue()
+                openPage(currentPageNumber + 1)
             case .purchase:
                 purchase()
             case .loading:
@@ -33,12 +33,26 @@ extension OnboardingView {
             }
         }
         
-        private func handleContinue() {
-            currentPageNumber += 1
-            currentPage = datasource.pages[currentPageNumber]
+        func didDragRight() {
+            openPage(currentPageNumber - 1)
+        }
+        
+        func didDragLeft() {
+            openPage(currentPageNumber + 1)
+        }
+        
+        // MARK: - Private
+        
+        private func openPage(_ pageNumber: Int) {
+            guard pageNumber < datasource.pages.count, pageNumber >= 0 else { return }
             
-            if currentPageNumber == datasource.pages.count - 1 {
+            currentPageNumber = pageNumber
+            currentPage = datasource.pages[pageNumber]
+            
+            if pageNumber == datasource.pages.count - 1 {
                 buttonState = .purchase
+            } else {
+                buttonState = .continue
             }
         }
         

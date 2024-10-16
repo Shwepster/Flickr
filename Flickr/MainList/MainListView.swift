@@ -31,8 +31,9 @@ struct MainListView: View {
         .refreshable {
             await viewModel.refresh()
         }
-        .sheet(item: $viewModel.photoEditorViewModel) { viewModel in
-            EditorView(viewModel: viewModel)
+        .sheet(item: $viewModel.editingViewModel) { viewModel in
+            let editorVM = EditorView.ViewModel(photoViewModel: viewModel)
+            EditorView(viewModel: editorVM)
                 .presentationDetents(.init([.fraction(0.7)]))
         }
         .alert(isPresented: $viewModel.errorModel.isErrorPresented, error: viewModel.errorModel.errorMessage) {

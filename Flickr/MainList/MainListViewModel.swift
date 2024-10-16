@@ -12,7 +12,7 @@ extension MainListView {
     final class ViewModel: ObservableObject {
         @Published var photoViewModels: [PhotoItemView.ViewModel] = []
         @Published var state: State = .idle
-        @Published var photoEditorViewModel: EditorView.ViewModel?
+        @Published var editingViewModel: PhotoItemView.ViewModel?
         @Published var errorModel = ErrorModel()
         private let paginationController: FlickrSearchPaginationController
         
@@ -70,9 +70,7 @@ extension MainListView {
                 PhotoItemView.ViewModel(photo: photo) { [weak self] viewModel in
                     self?.deletePhoto(viewModel: viewModel)
                 } onEdit: { [weak self] viewModel in
-                    self?.photoEditorViewModel = EditorView.ViewModel(photoViewModel: viewModel) { [weak self] in
-                        self?.photoEditorViewModel = nil
-                    }
+                    self?.editingViewModel = viewModel
                 }
             }
         }

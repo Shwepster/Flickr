@@ -13,14 +13,13 @@ extension EditorView {
     final class ViewModel: ObservableObject, Identifiable {
         @Published var editedImage: Image
         @Published var hueRotation = 0.0
+        @Published var needsDismiss: Bool = false
         let angleRange = 0.0...360
         let photoViewModel: PhotoItemView.ViewModel
         let id = UUID().uuidString
-        private let onSaveCallback: () -> Void
         
-        init(photoViewModel: PhotoItemView.ViewModel, onSave: @escaping () -> Void = {}) {
+        init(photoViewModel: PhotoItemView.ViewModel) {
             self.photoViewModel = photoViewModel
-            self.onSaveCallback = onSave
             self.editedImage = photoViewModel.image ?? .init(systemName: "pencil")
         }
         
@@ -33,7 +32,7 @@ extension EditorView {
                 photoViewModel.image = Image(uiImage: uiImage)
             }
             
-            onSaveCallback()
+            needsDismiss = true
         }
     }
 }
