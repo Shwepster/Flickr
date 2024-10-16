@@ -9,7 +9,7 @@ import SwiftUI
 
 extension PhotoItemView {
     @MainActor
-    final class ViewModel: ObservableObject {
+    final class ViewModel: ObservableObject, Identifiable {
         typealias ViewModel = PhotoItemView.ViewModel
         @Published var image: Image?
         let title: String

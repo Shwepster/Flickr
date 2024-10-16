@@ -8,17 +8,27 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @ObservedObject var viewModel: ViewModel
+    @StateObject private var viewModel: ViewModel
+    @State private var dragController = DragController()
+    
+    init(viewModel: ViewModel) {
+        _viewModel = .init(wrappedValue: viewModel)
+    }
     
     var body: some View {
         VStack {
             Text(viewModel.currentPage.title)
                 .font(.title)
                 .bold()
+            
             content
             Spacer()
-            button
-                .padding(.bottom, 40)
+            
+            OnboardingButton(
+                onTap: { viewModel.onContinueTapped() },
+                buttonState: viewModel.buttonState
+            )
+            .padding(.bottom, 40)
         }
         .padding()
         .background {
@@ -32,57 +42,34 @@ struct OnboardingView: View {
                 }
                 .ignoresSafeArea()
         }
+        .gesture(dragGesture)
     }
     
     @ViewBuilder
     private var content: some View {
         OnboardingContentFabric.makeView(for: viewModel.currentPage)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .transition(
-                .push(from: .trailing)
-            )
+            .transition(.push(from: dragController.draggedFromSide))
             .animation(.smooth, value: viewModel.currentPage)
     }
     
-    @ViewBuilder
-    private var button: some View {
-        Button {
-            withAnimation {
-                viewModel.onContinueTapped()
-            }
-        } label: {
-            HStack(spacing: 0) {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .tint(.secondary)
-                    .scaleEffect(0.8)
-                    .padding(.trailing, -16)
-                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .trailing)
-                    .hidden(viewModel.buttonState != .loading)
-
-                Text(buttonTitle)
-                    .frame(maxWidth: .infinity)
+    private var dragGesture: some Gesture {
+        DragGesture()
+            .onChanged { value in
+                guard !dragController.isDragging else { return }
+                dragController.startDrag(value.translation)
+                let dragAnimationDuration = 0.8
                 
-                Color.clear
-                    .frame(minWidth: 0, maxWidth: .infinity, maxHeight: 0)
-                    .hidden()
+                withAnimation(.easeInOut(duration: dragAnimationDuration)) {
+                    if dragController.isLeft {
+                        viewModel.didDragLeft()
+                    } else if dragController.isRight {
+                        viewModel.didDragRight()
+                    }
+                } completion: {
+                    dragController.endDrag()
+                }
             }
-        }
-        .buttonStyle(.borderedProminent)
-        .controlSize(.extraLarge)
-        .tint(.app.lightPurple)
-        .shadow(color: .app.extraLightPurple.opacity(0.1), radius: 16)
-    }
-    
-    private var buttonTitle: String {
-        switch viewModel.buttonState {
-        case .continue:
-            "Continue"
-        case .purchase:
-            "Purchase"
-        case .loading:
-            "Loading"
-        }
     }
 }
 

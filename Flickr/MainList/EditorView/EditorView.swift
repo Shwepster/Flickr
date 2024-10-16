@@ -8,7 +8,12 @@
 import SwiftUI
 
 struct EditorView: View {
-    @ObservedObject var viewModel: ViewModel
+    @StateObject private var viewModel: ViewModel
+    @Environment(\.dismiss) private var dismiss
+    
+    init(viewModel: ViewModel) {
+        _viewModel = .init(wrappedValue: viewModel)
+    }
     
     var body: some View {
         VStack {
@@ -24,6 +29,9 @@ struct EditorView: View {
         }
         .padding()
         .background(Color.app.background)
+        .onChange(of: viewModel.needsDismiss) {
+            dismiss()
+        }
     }
     
     @ViewBuilder
