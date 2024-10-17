@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import CoreGraphics
 
 struct OnboardingButton: View {
-    let onTap: Callback
+    let onTap: () -> Void
     let buttonState: OnboardingView.ButtonState
+    @State private var isAnimating: Bool = false
     
     var body: some View {
         Button {
@@ -37,7 +39,15 @@ struct OnboardingButton: View {
         .buttonStyle(.borderedProminent)
         .controlSize(.extraLarge)
         .tint(.app.lightPurple)
-        .shadow(color: .app.extraLightPurple.opacity(0.1), radius: 16)
+        .scaleEffect(isAnimating ? 1.05 : 1)
+        .shadow(color: .app.extraLightPurple.opacity(isAnimating ? 0.3 : 0.15), radius: 16)
+        .animation(
+            .linear(duration: 1).repeatForever(autoreverses: true),
+            value: isAnimating
+        )
+        .onAppear {
+            isAnimating = true
+        }
     }
     
     private var title: String {

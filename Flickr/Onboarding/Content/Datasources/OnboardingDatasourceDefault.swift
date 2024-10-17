@@ -15,16 +15,34 @@ extension OnboardingView {
                 .features(
                     .init(
                         title: "Features",
-                        features: ["SwiftUI", "Combine", "EnvironmentObject", "StateObject", "ObservableObject"]
+                        features: [
+                            "SwiftUI",
+                            "Combine",
+                            "EnvironmentObject",
+                            "StateObject",
+                            "ObservableObject"
+                        ],
+                        images: [],
+                        bottomText: []
                     )
                 ),
                 .features(
                     .init(
                         title: "Features",
-                        features: ["Free", "Pro", "Enterprise"]
+                        features: ["Free", "Pro", "Enterprise"],
+                        images: [.init(.placeholder), .init(.placeholder), .init(.placeholder)],
+                        bottomText: ["New Features", "Upgrade Now"]
                     )
                 ),
-                .purchase(.init(title: "Complete Your Purchase", features: [], price: 99.99))
+                .purchase(
+                    .init(
+                        type: .default,
+                        title: "Complete Your Purchase",
+                        features: [],
+                        images: [],
+                        price: 99.99
+                    )
+                )
             ]
         }
     }

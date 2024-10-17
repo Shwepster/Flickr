@@ -12,10 +12,19 @@ extension OnboardingView {
         init() {
             self.pages = [
                 .welcome(.init(title: "", description: "Welcome to Flickr")),
+                .image(
+                    .init(
+                        title: "Best of Flickr",
+                        image: .init(.placeholder),
+                        text: "Lorem ipsum dolor sit amet"
+                    )
+                ),
                 .purchase(
                     .init(
+                        type: .new,
                         title: "Complete Your Purchase\nAnd Get:",
                         features: ["Music", "Videos", "Photos", "Groups", "Pages"] ,
+                        images: [],
                         price: 29.99
                     )
                 )

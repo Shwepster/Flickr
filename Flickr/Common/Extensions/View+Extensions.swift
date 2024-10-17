@@ -23,7 +23,7 @@ extension View {
     }
 
     @ViewBuilder
-    func ifLet<T, Transform: View> (_ value: T?, transform: (Self, T) -> Transform) -> some View {
+    func ifLet<T>(_ value: T?, transform: (Self, T) -> some View) -> some View {
         if let value = value {
             transform(self, value)
         } else {
@@ -32,7 +32,7 @@ extension View {
     }
 
     @ViewBuilder
-    func `if`<Transform: View> (_ condition: Bool, transform: (Self) -> Transform) -> some View {
+    func `if`(_ condition: Bool, transform: (Self) -> some View) -> some View {
         if condition {
             transform(self)
         } else {
@@ -43,5 +43,12 @@ extension View {
     @ViewBuilder
     func foreground<Overlay: View>(_ overlay: Overlay) -> some View {
         self.overlay(overlay).mask(self)
+    }
+    
+    @ViewBuilder
+    func withFrame(transform: @escaping (Self, CGRect) -> some View) -> some View {
+        GeometryReader { geometry in
+            transform(self, geometry.frame(in: .local))
+        }
     }
 }
