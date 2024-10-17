@@ -18,13 +18,7 @@ struct EditorView: View {
     var body: some View {
         VStack {
             editorImage
-            HStack {
-                Slider(value: $viewModel.hueRotation, in: viewModel.angleRange)
-                Text(viewModel.hueRotation.rounded().formatted())
-                    .monospaced()
-                    .frame(width: 40, alignment: .center)
-            }
-
+            slider
             buttons
         }
         .padding()
@@ -59,6 +53,16 @@ struct EditorView: View {
         }
         .buttonStyle(.bordered)
         .controlSize(.mini)
+    }
+    
+    @ViewBuilder
+    private var slider: some View {
+        HStack {
+            Slider(value: $viewModel.hueRotation, in: viewModel.angleRange)
+            Text(viewModel.hueRotation.rounded().formatted())
+                .monospaced()
+                .frame(width: 40, alignment: .center)
+        }
     }
 }
 

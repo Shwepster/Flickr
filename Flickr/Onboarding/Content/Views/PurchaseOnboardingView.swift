@@ -10,10 +10,11 @@ import SwiftUI
 struct PurchaseOnboardingView: View {
     let price: Decimal
     let features: [String]
+    let images: [Image]
     
     var body: some View {
         if features.isNotEmpty {
-            FeaturesOnboardingView(features: features)
+            FeaturesOnboardingView(features: features, images: images)
         } else {
             Spacer()
         }
@@ -39,6 +40,7 @@ struct PurchaseOnboardingView: View {
             "Feature 1",
             "Feature 2",
             "Feature 3"
-        ]
+        ],
+        images: [.init(.placeholder), .init(.placeholder), .init(.placeholder)]
     )
 }

@@ -14,15 +14,29 @@ extension OnboardingView {
         @Published private(set) var currentPage: OnboardingPageType
         private var currentPageNumber: Int = 0
         private let datasource: OnboardingDatasource
-        private let onPurchase: Callback
+        private let onPurchase: () -> Void
         
-        init(datasource: OnboardingDatasource, onPurchase: @escaping Callback = {}) {
+        init(datasource: OnboardingDatasource, onPurchase: @escaping () -> Void = {}) {
             self.datasource = datasource
             self.onPurchase = onPurchase
             self.currentPage = datasource.pages.first!
         }
         
-        func onContinueTapped() {
+        private(set) lazy var termsAction: () -> Void = {
+            UrlOpeningService.openUrl(withPath: "https://google.com")
+        }
+        
+        private(set) lazy var conditionsAction: () -> Void = {
+            UrlOpeningService.openUrl(withPath: "https://google.com")
+        }
+        
+        private(set) lazy var restoreAction: () -> Void = { [weak self] in
+            print("Restore")
+            self?.purchase()
+        }
+        
+        private(set) lazy var continueAction: () -> Void = { [weak self] in
+            guard let self else { return }
             switch buttonState {
             case .continue:
                 openPage(currentPageNumber + 1)

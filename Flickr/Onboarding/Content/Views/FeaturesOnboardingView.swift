@@ -9,8 +9,18 @@ import SwiftUI
 
 struct FeaturesOnboardingView: View {
     let features: [String]
+    let images: [Image]
     
     var body: some View {
+        VStack {
+            featureList
+            imageList
+            Spacer()
+        }
+    }
+    
+    @ViewBuilder
+    private var featureList: some View {
         VStack {
             ForEach(features) { feature in
                 Text(feature)
@@ -18,17 +28,34 @@ struct FeaturesOnboardingView: View {
             .foregroundStyle(.secondary)
             .font(.headline)
             .italic()
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, minHeight: 35, maxHeight: 50, alignment: .leading)
         }
         .padding()
         .background(Color.app.barBackground.opacity(0.8))
         .clipShape(RoundedRectangle(cornerRadius: 16))
-        
-        Spacer()
+        .padding()
+    }
+    
+    @ViewBuilder
+    private var imageList: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 16) {
+                ForEach(images.indices, id: \.self) { i in
+                    images[i]
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 125, height: 125)
+                        .clipShape(Circle())
+                }
+            }
+            .padding()
+        }
     }
 }
 
 #Preview {
-    FeaturesOnboardingView(features: ["SwiftUI", "Combine", "UIKit"])
+    FeaturesOnboardingView(
+        features: ["SwiftUI", "Combine", "UIKit"],
+        images: [.init(.placeholder)]
+    )
 }

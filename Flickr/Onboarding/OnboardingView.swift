@@ -20,17 +20,22 @@ struct OnboardingView: View {
             Text(viewModel.currentPage.title)
                 .font(.title)
                 .bold()
+                .id(viewModel.currentPage.title)
             
             content
-            Spacer()
             
             OnboardingButton(
-                onTap: { viewModel.onContinueTapped() },
+                onTap: viewModel.continueAction,
                 buttonState: viewModel.buttonState
             )
-            .padding(.bottom, 40)
+            .padding()
+            .padding(.horizontal)
+            
+            bottomContent
+                .padding(.horizontal)
+                .frame(height: 25)
         }
-        .padding()
+        .padding(.vertical)
         .background {
             Image(.placeholder)
                 .resizable()
@@ -47,10 +52,20 @@ struct OnboardingView: View {
     
     @ViewBuilder
     private var content: some View {
-        OnboardingContentFabric.makeView(for: viewModel.currentPage)
+        OnboardingContentFabric.makeContent(for: viewModel.currentPage)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .transition(.push(from: dragController.draggedFromSide))
-            .animation(.smooth, value: viewModel.currentPage)
+    }
+    
+    @ViewBuilder
+    private var bottomContent: some View {
+        OnboardingContentFabric
+            .makeBottomContent(
+                for: viewModel.currentPage,
+                termsAction: viewModel.termsAction,
+                conditionsAction: viewModel.conditionsAction,
+                restoreAction: viewModel.restoreAction
+            )
     }
     
     private var dragGesture: some Gesture {
@@ -58,9 +73,8 @@ struct OnboardingView: View {
             .onChanged { value in
                 guard !dragController.isDragging else { return }
                 dragController.startDrag(value.translation)
-                let dragAnimationDuration = 0.8
                 
-                withAnimation(.easeInOut(duration: dragAnimationDuration)) {
+                withAnimation(.smooth) {
                     if dragController.isLeft {
                         viewModel.didDragLeft()
                     } else if dragController.isRight {
@@ -71,6 +85,14 @@ struct OnboardingView: View {
                 }
             }
     }
+}
+
+#Preview {
+    @Previewable @StateObject var viewModel = OnboardingView.ViewModel(
+        datasource: OnboardingView.OnboardingDatasourceDefault()
+    )
+   
+    OnboardingView(viewModel: viewModel)
 }
 
 #Preview {
