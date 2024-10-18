@@ -7,6 +7,6 @@
 
 
 struct HistoryItem: Identifiable, Equatable, Codable {
-    let id: String
+    var id: String { text }
     let text: String
 }

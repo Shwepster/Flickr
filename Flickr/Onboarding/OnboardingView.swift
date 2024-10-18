@@ -17,9 +17,7 @@ struct OnboardingView: View {
     
     var body: some View {
         VStack {
-            Text(viewModel.currentPage.title)
-                .font(.title)
-                .bold()
+            OnboardingContentFabric.makeTitle(for: viewModel.currentPage)
                 .id(viewModel.currentPage.title)
             
             content
@@ -47,6 +45,7 @@ struct OnboardingView: View {
                 }
                 .ignoresSafeArea()
         }
+        .animation(.smooth, value: viewModel.currentPage)
         .gesture(dragGesture)
     }
     
@@ -54,7 +53,7 @@ struct OnboardingView: View {
     private var content: some View {
         OnboardingContentFabric.makeContent(for: viewModel.currentPage)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .transition(.push(from: dragController.draggedFromSide))
+            .transition(.push(from: dragController.animationSide))
     }
     
     @ViewBuilder
@@ -69,20 +68,19 @@ struct OnboardingView: View {
     }
     
     private var dragGesture: some Gesture {
-        DragGesture()
+        DragGesture(minimumDistance: 15)
             .onChanged { value in
                 guard !dragController.isDragging else { return }
                 dragController.startDrag(value.translation)
                 
                 withAnimation(.smooth) {
-                    if dragController.isLeft {
-                        viewModel.didDragLeft()
-                    } else if dragController.isRight {
-                        viewModel.didDragRight()
-                    }
-                } completion: {
-                    dragController.endDrag()
+                    dragController.dragDirection == .leading
+                    ? viewModel.didDragForward()
+                    : viewModel.didDragBack()
                 }
+            }
+            .onEnded { _ in
+                dragController.endDrag()
             }
     }
 }

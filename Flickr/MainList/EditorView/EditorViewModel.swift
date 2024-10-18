@@ -17,6 +17,7 @@ extension EditorView {
         let angleRange = 0.0...360
         let photoViewModel: PhotoItemView.ViewModel
         let id = UUID().uuidString
+        @ServiceLocator(.singleton) private var logger: FlickrLogger
         
         init(photoViewModel: PhotoItemView.ViewModel) {
             self.photoViewModel = photoViewModel
@@ -24,6 +25,8 @@ extension EditorView {
         }
         
         func onSave() {
+            logger.logEvent(.special)
+            
             let uiImage = editedImage
                 .hueRotation(.degrees(hueRotation))
                 .asUIImage()

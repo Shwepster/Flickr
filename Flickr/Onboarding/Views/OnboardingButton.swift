@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CoreGraphics
 
 struct OnboardingButton: View {
     let onTap: () -> Void
@@ -14,11 +13,7 @@ struct OnboardingButton: View {
     @State private var isAnimating: Bool = false
     
     var body: some View {
-        Button {
-            withAnimation {
-                onTap()
-            }
-        } label: {
+        Button(action: onTap) {
             HStack(spacing: 0) {
                 ProgressView()
                     .progressViewStyle(.circular)
@@ -41,12 +36,16 @@ struct OnboardingButton: View {
         .tint(.app.lightPurple)
         .scaleEffect(isAnimating ? 1.05 : 1)
         .shadow(color: .app.extraLightPurple.opacity(isAnimating ? 0.3 : 0.15), radius: 16)
+        .if(buttonState != .purchase) {
+            // this code will remove any animation that started before
+            $0.animation(nil, value: isAnimating)
+        }
         .animation(
             .linear(duration: 1).repeatForever(autoreverses: true),
             value: isAnimating
         )
-        .onAppear {
-            isAnimating = true
+        .onChange(of: buttonState) { oldValue, newValue in
+            isAnimating = newValue == .purchase
         }
     }
     

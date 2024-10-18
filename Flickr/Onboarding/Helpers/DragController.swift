@@ -10,26 +10,19 @@ import SwiftUI
 extension OnboardingView {
     struct DragController {
         private(set) var isDragging = false
-        private var didDragLeft: Bool?
+        private(set) var dragDirection: Edge = .trailing
         
-        var draggedFromSide: Edge { didDragLeft == false ? .leading : .trailing }
-        var isLeft: Bool { didDragLeft == true }
-        var isRight: Bool { didDragLeft == false }
+        var animationSide: Edge {
+            isDragging ? dragDirection.opposite : .trailing
+        }
         
         mutating func startDrag(_ translation: CGSize) {
             isDragging = true
-            if translation.width > 15 {
-                didDragLeft = false
-            } else if translation.width < -15 {
-                didDragLeft = true
-            } else {
-                didDragLeft = nil
-            }
+            dragDirection = translation.width > 0 ? .trailing : .leading
         }
         
         mutating func endDrag() {
             isDragging = false
-            didDragLeft = nil
         }
     }
 }
