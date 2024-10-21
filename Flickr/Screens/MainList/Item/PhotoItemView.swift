@@ -70,6 +70,9 @@ struct PhotoItemView: View {
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
+                    viewModel.onSelect()
+                }
+                .onLongPressGesture {
                     viewModel.onEdit()
                 }
         }

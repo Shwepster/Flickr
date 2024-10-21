@@ -20,15 +20,18 @@ extension PhotoItemView {
         private let photoSize = AppSettings.photoSize
         private let onDeleteCallback: (ViewModel) -> Void
         private let onEditCallback: (ViewModel) -> Void
+        private let onSelectCallback: (ViewModel) -> Void
         
         init(
             photo: PhotoDTO,
             onDelete: @escaping (ViewModel) -> Void = { _ in },
-            onEdit: @escaping (ViewModel) -> Void = { _ in }
+            onEdit: @escaping (ViewModel) -> Void = { _ in },
+            onSelect: @escaping (ViewModel) -> Void = { _ in }
         ) {
             self.photo = photo
             self.onDeleteCallback = onDelete
             self.onEditCallback = onEdit
+            self.onSelectCallback = onSelect
             self.title = (photo.title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
             
             do {
@@ -57,6 +60,10 @@ extension PhotoItemView {
             onDeleteCallback(self)
         }
         
+        func onSelect() {
+            onSelectCallback(self)
+        }
+        
         // MARK: - Private
         
         private func loadImage() async {
@@ -76,5 +83,11 @@ extension PhotoItemView {
 extension PhotoItemView.ViewModel: Equatable {
     nonisolated public static func == (lhs: PhotoItemView.ViewModel, rhs: PhotoItemView.ViewModel) -> Bool {
         lhs.id == rhs.id
+    }
+}
+
+extension PhotoItemView.ViewModel: Hashable {
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(photo.id)
     }
 }

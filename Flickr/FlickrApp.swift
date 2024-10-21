@@ -13,19 +13,15 @@ struct FlickrApp: App {
     
     init() {
         AppServicesRegistrator.registerAllServices()
-        clearCache()
         configureNavigationBarAppearance()
+        clearCache()
     }
     
     var body: some Scene {
         WindowGroup {
             ZStack {
                 Color.clear
-                if let viewModel = viewModel.onboardingVM {
-                    OnboardingView(viewModel: viewModel)
-                } else {
-                    SearchableMainListView()
-                }
+                getContentView()
             }
             .animation(.smooth, value: viewModel.onboardingVM == nil)
             .preferredColorScheme(.dark) // Force Dark Mode for the entire app
@@ -37,6 +33,15 @@ struct FlickrApp: App {
             .task {
                 viewModel.onCreated()
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func getContentView() -> some View {
+        if let viewModel = viewModel.onboardingVM {
+            OnboardingView(viewModel: viewModel)
+        } else {
+            SearchableMainListView()
         }
     }
     

@@ -36,6 +36,9 @@ struct MainListView: View {
             EditorView(viewModel: editorVM)
                 .presentationDetents(.init([.fraction(0.7)]))
         }
+        .sheet(item: $viewModel.pageViewModel) { pageViewModel in
+            PageView(viewModel: pageViewModel)
+        }
         .alert(isPresented: $viewModel.errorModel.isErrorPresented, error: viewModel.errorModel.errorMessage) {
             Button("Retry") {
                 Task {

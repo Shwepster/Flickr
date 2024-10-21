@@ -42,6 +42,14 @@ extension PhotoDTO {
     static var test: Self {
         .init(id: "1", owner: "2", secret: "3", server: "4", title: "Test Title")
     }
+    
+    static func test(id: String) -> Self {
+        .init(id: id, owner: "2", secret: "3", server: "4", title: "Test Title")
+    }
+    
+    static var testList: [Self] {
+        [.test(id: "1"), .test(id: "2"), .test(id: "3"), .test(id: "4"), .test(id: "5")]
+    }
 }
 
 // MARK: - Equatable

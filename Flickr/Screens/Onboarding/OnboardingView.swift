@@ -52,7 +52,8 @@ struct OnboardingView: View {
     @ViewBuilder
     private var content: some View {
         OnboardingContentFabric.makeContent(for: viewModel.currentPage)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxHeight: .infinity)
+            .containerRelativeFrame(.horizontal)
             .transition(.push(from: dragController.animationSide))
     }
     
