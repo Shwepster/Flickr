@@ -29,7 +29,8 @@ struct PageView: View {
                 }
             }
         }
-        .background(Color.app.backgroundGradient)
+        .background(.clear)
+        .swipeToDismiss()
     }
     
     @ViewBuilder
@@ -41,8 +42,8 @@ struct PageView: View {
                 .containerRelativeFrame(
                     .horizontal, count: 1, span: 1, spacing: 0
                 )
-                .containerRelativeFrame(.vertical)
-                .background(Color.app.secondaryBackground)
+                .frame(maxHeight: .infinity)
+                .background(.app.backgroundGradient)
                 .foregroundStyle(.white)
                 .contentShape(Rectangle())
                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -62,18 +63,17 @@ struct PageView: View {
 
 #Preview {
     @Previewable @StateObject var viewModel = PageView.ViewModel(
-        initialPhoto: .init(
-            photo: .test
-        ),
+        initialPhoto: nil,
         photos: PhotoDTO.testList.map {
             PhotoItemView.ViewModel(
                 photo: $0
             )
         },
-        onSelect: {
-            _ in
-        }
+        onSelect: {_ in}
     )
     
     PageView(viewModel: viewModel)
+        .task {
+            viewModel.photos.forEach { vm in Task { await vm.onCreated() } }
+        }
 }

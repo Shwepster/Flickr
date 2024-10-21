@@ -62,7 +62,7 @@ struct PhotoItemView: View {
                     width: geometry.size.width,
                     height: geometry.size.height
                 )
-                .background(Color.app.lightPurple)
+                .background(.app.lightPurple)
                 .overlay(alignment: .bottom) {
                     if viewModel.title.isNotEmpty {
                         title
@@ -106,7 +106,7 @@ struct PhotoItemView: View {
 fileprivate extension Image {
     func barImageModifier() -> some View {
         self.padding(10)
-            .background(Color.app.background)
+            .background(.app.background)
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .padding(8)
     }

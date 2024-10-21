@@ -33,7 +33,7 @@ enum AppStyle {
     }
 }
 
-extension Color {
+extension ShapeStyle where Self == Color {
     static var app: AppStyle.Type {
         AppStyle.self
     }

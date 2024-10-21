@@ -26,7 +26,7 @@ struct MainListView: View {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
-        .background(Color.app.background)
+        .background(.app.backgroundGradient)
         .animation(.easeInOut.speed(2), value: viewModel.photoViewModels)
         .refreshable {
             await viewModel.refresh()
@@ -36,8 +36,9 @@ struct MainListView: View {
             EditorView(viewModel: editorVM)
                 .presentationDetents(.init([.fraction(0.7)]))
         }
-        .sheet(item: $viewModel.pageViewModel) { pageViewModel in
+        .fullScreenCover(item: $viewModel.pageViewModel) { pageViewModel in
             PageView(viewModel: pageViewModel)
+                .presentationBackground(.ultraThinMaterial)
         }
         .alert(isPresented: $viewModel.errorModel.isErrorPresented, error: viewModel.errorModel.errorMessage) {
             Button("Retry") {
