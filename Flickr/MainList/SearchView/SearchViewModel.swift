@@ -13,6 +13,7 @@ extension SearchableMainListView {
         @Published var searchText: String = ""
         @Published var history: [HistoryItem] = []
         @ServiceLocator private var storage: HistoryStorage
+        @ServiceLocator(.singleton) private var logger: FlickrLogger
         let listViewModel = MainListView.ViewModel()
         
         func onAppear() {
@@ -31,10 +32,11 @@ extension SearchableMainListView {
         
         func search() {
             Task {
+                logger.logEvent(.search)
                 await listViewModel.onSearch(searchText)
                 
                 guard searchText.trimmingCharacters(in: .whitespacesAndNewlines).isNotEmpty else { return }
-                let item = HistoryItem(id: UUID().uuidString, text: searchText)
+                let item = HistoryItem(text: searchText)
                 storage.store(item)
                 syncHistory()
             }

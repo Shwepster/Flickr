@@ -12,18 +12,21 @@ struct SearchableMainListView: View {
     @FocusState private var isFocused: Bool
     
     var body: some View {
-        MainListView(viewModel: viewModel.listViewModel)
-            .searchable(text: $viewModel.searchText, prompt: "Search for photos")
-            .searchFocused($isFocused)
-            .onSubmit(of: .search) { search() }
-            .navigationTitle("Flickr")
-            .onAppear { viewModel.onAppear() }
-            .overlay {
-                if isFocused {
-                    suggestionsView
+        NavigationView {
+            MainListView(viewModel: viewModel.listViewModel)
+                .searchable(text: $viewModel.searchText, prompt: "Search for photos")
+                .searchFocused($isFocused)
+                .onSubmit(of: .search) { search() }
+                .navigationTitle("Flickr")
+                .overlay {
+                    if isFocused {
+                        suggestionsView
+                    }
                 }
-            }
-            .animation(.easeInOut.speed(2), value: isFocused)
+                .animation(.easeInOut.speed(2), value: isFocused)
+        }
+        .onAppear { viewModel.onAppear() }
+        .tint(.app.extraLightPurple)
     }
     
     @ViewBuilder
@@ -57,6 +60,9 @@ struct SearchableMainListView: View {
             viewModel.clearHistory()
         } label: {
             Text("Clear history")
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.app.secondaryBackground)
         }
     }
     
@@ -109,7 +115,5 @@ struct SearchableMainListView: View {
 }
 
 #Preview {
-    NavigationView {
-        SearchableMainListView()
-    }
+    SearchableMainListView()
 }

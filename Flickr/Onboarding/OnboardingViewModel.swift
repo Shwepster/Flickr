@@ -15,6 +15,7 @@ extension OnboardingView {
         private var currentPageNumber: Int = 0
         private let datasource: OnboardingDatasource
         private let onPurchase: () -> Void
+        @ServiceLocator(.singleton) private var logger: FlickrLogger
         
         init(datasource: OnboardingDatasource, onPurchase: @escaping () -> Void = {}) {
             self.datasource = datasource
@@ -31,7 +32,7 @@ extension OnboardingView {
         }
         
         private(set) lazy var restoreAction: () -> Void = { [weak self] in
-            print("Restore")
+            self?.logger.logEvent(.promo)
             self?.purchase()
         }
         
@@ -47,11 +48,11 @@ extension OnboardingView {
             }
         }
         
-        func didDragRight() {
+        func didDragBack() {
             openPage(currentPageNumber - 1)
         }
         
-        func didDragLeft() {
+        func didDragForward() {
             openPage(currentPageNumber + 1)
         }
         

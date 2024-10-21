@@ -11,6 +11,24 @@ extension OnboardingView {
     @MainActor
     enum OnboardingContentFabric {
         @ViewBuilder
+        static func makeTitle(for type: OnboardingPageType) -> some View {
+            let title = switch type {
+            case .welcome(let model):
+                model.title
+            case .features(let model):
+                model.title
+            case .purchase(let model):
+                model.title
+            case .image(let model):
+                model.title
+            }
+            
+            Text(title)
+                .font(.title)
+                .bold()
+        }
+        
+        @ViewBuilder
         static func makeContent(for type: OnboardingPageType) -> some View {
             switch type {
             case .welcome(let model):

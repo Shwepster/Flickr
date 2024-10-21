@@ -19,17 +19,24 @@ struct FlickrApp: App {
     
     var body: some Scene {
         WindowGroup {
-            Group {
+            ZStack {
+                Color.clear
                 if let viewModel = viewModel.onboardingVM {
                     OnboardingView(viewModel: viewModel)
                 } else {
-                    NavigationView {
-                        SearchableMainListView()
-                    }
+                    SearchableMainListView()
                 }
             }
             .animation(.smooth, value: viewModel.onboardingVM == nil)
             .preferredColorScheme(.dark) // Force Dark Mode for the entire app
+            .sheet(isPresented: $viewModel.isCampaignPresented) {
+                viewModel.onCampaignDismiss()
+            } content: {
+                viewModel.getCampaignView()
+            }
+            .task {
+                viewModel.onCreated()
+            }
         }
     }
     

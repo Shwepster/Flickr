@@ -26,7 +26,14 @@ struct HistoryStorage {
     
     func store(_ item: HistoryItem) {
         var history = fetch()
-        history.insert(item, at: 0)
+        
+        if let index = history.firstIndex(of: item) {
+            // if item is in history, move it to top
+            history.move(fromOffsets: IndexSet(integer: index), toOffset: 0)
+        } else {
+            history.insert(item, at: 0)
+        }
+
         store(history)
     }
     

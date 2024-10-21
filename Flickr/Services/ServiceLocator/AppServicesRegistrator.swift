@@ -9,6 +9,8 @@ import Foundation
 
 enum AppServicesRegistrator {
     static func registerAllServices() {
+        registerCampaignMediator()
+        registerLogger()
         registerHistoryStorage()
         registerImageCacheService()
         registerFlickrService()
@@ -20,6 +22,9 @@ enum AppServicesRegistrator {
     }
     
     // MARK: - Individual registrations
+    private static func registerCampaignMediator() {
+        ServiceContainer.register(CampaignViewMediator.self, factory: CampaignViewMediator())
+    }
     
     private static func registerFlickrService() {
         ServiceContainer.register(FlickrService.self) {
@@ -33,6 +38,13 @@ enum AppServicesRegistrator {
             )
             
             return service
+        }
+    }
+    
+    private static func registerLogger() {
+        ServiceContainer.register(FlickrLogger.self) {
+            let logger = LoggerDefault()
+            return CampaignLogger(logger: logger)
         }
     }
     
