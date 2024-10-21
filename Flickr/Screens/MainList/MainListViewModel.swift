@@ -87,33 +87,3 @@ extension MainListView {
         }
     }
 }
-
-extension MainListView.ViewModel {
-    struct ErrorModel {
-        var isErrorPresented = false {
-            didSet {
-                if oldValue == true, isErrorPresented == false {
-                    errorMessage = nil
-                }
-            }
-        }
-        
-        private(set) var errorMessage: String?
-        
-        mutating func presentError(_ error: String) {
-            errorMessage = error
-            isErrorPresented = true
-        }
-    }
-}
-
-// MARK: - State
-
-extension MainListView.ViewModel {
-    enum State: Equatable {
-        case loading
-        case idle
-        case allPagesLoaded
-        case error(String)
-    }
-}

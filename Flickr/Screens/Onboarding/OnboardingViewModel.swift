@@ -81,13 +81,3 @@ extension OnboardingView {
         }
     }
 }
-
-// MARK: - ButtonState
-
-extension OnboardingView {
-    enum ButtonState {
-        case `continue`
-        case purchase
-        case loading
-    }
-}
