@@ -23,7 +23,7 @@ struct PurchaseOnboardingView: View {
             Image(systemName: "cart")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .foregroundStyle(Color.app.extraLightPurple)
+                .foregroundStyle(.app.extraLightPurple)
             
             Text("Purchase for only \(price.formatted(.currency(code: "USD")))")
                 .font(.title2)

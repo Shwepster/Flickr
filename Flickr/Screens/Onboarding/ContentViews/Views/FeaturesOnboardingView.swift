@@ -31,7 +31,7 @@ struct FeaturesOnboardingView: View {
             .frame(maxWidth: .infinity, minHeight: 35, maxHeight: 50, alignment: .leading)
         }
         .padding()
-        .background(Color.app.barBackground.opacity(0.8))
+        .background(.app.barBackground.opacity(0.8))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .padding()
     }

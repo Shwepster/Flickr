@@ -22,7 +22,7 @@ struct EditorView: View {
             buttons
         }
         .padding()
-        .background(Color.app.background)
+        .background(.app.background)
         .onChange(of: viewModel.needsDismiss) {
             dismiss()
         }

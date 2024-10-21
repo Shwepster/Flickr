@@ -16,15 +16,17 @@ extension FlickrApp {
         @ServiceLocator(.singleton) private var campaignMediator: CampaignViewMediator
         private var cancellables: Set<AnyCancellable> = []
         
-        init() {
-            onboardingVM = .init(
-                datasource: [
-                    OnboardingView.OnboardingDatasourceNew(),
-                    OnboardingView.OnboardingDatasourceDefault()
-                ].randomElement()!,
-                onPurchase: { [unowned self] in
-                self.onboardingVM = nil
-            })
+        init(showOnboarding: Bool = false) {
+            if showOnboarding {
+                onboardingVM = .init(
+                    datasource: [
+                        OnboardingView.OnboardingDatasourceNew(),
+                        OnboardingView.OnboardingDatasourceDefault()
+                    ].randomElement()!,
+                    onPurchase: { [unowned self] in
+                        self.onboardingVM = nil
+                    })
+            }
         }
         
         func onCreated() {

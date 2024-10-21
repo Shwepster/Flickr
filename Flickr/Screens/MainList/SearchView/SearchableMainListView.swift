@@ -47,7 +47,7 @@ struct SearchableMainListView: View {
             
             Spacer()
         }
-        .background(Color.app.background)
+        .background(.app.background)
         .animation(.easeInOut, value: viewModel.history)
         .onTapGesture {
             cancelFocus()
@@ -62,7 +62,7 @@ struct SearchableMainListView: View {
             Text("Clear history")
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color.app.secondaryBackground)
+                .background(.app.secondaryBackground)
         }
     }
     

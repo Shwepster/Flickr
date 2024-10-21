@@ -23,7 +23,7 @@ extension PageView {
         ) {
             self.photos = photos
             self.onSelect = onSelect
-            self.currentPhoto = initialPhoto
+            self.currentPhoto = initialPhoto ?? photos.first
         }
         
         deinit {
