@@ -34,6 +34,7 @@ struct FeaturesOnboardingView: View {
         .background(.app.barBackground.opacity(0.8))
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .padding()
+        .isRemoved(features.isEmpty)
     }
     
     @ViewBuilder
@@ -50,6 +51,7 @@ struct FeaturesOnboardingView: View {
             }
             .padding()
         }
+        .isRemoved(images.isEmpty)
     }
 }
 

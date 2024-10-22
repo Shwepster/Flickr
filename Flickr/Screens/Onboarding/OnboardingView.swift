@@ -9,10 +9,17 @@ import SwiftUI
 
 struct OnboardingView: View {
     @StateObject private var viewModel: ViewModel
-    @State private var dragController = DragController()
+    @State private var dragController: DragController
     
     init(viewModel: ViewModel) {
         _viewModel = .init(wrappedValue: viewModel)
+        
+        let dragController = DragController { edge in
+            edge == .leading
+            ? viewModel.didDragForward()
+            : viewModel.didDragBack()
+        }
+        _dragController = .init(wrappedValue: dragController)
     }
     
     var body: some View {
@@ -22,16 +29,17 @@ struct OnboardingView: View {
             
             content
             
-            OnboardingButton(
-                onTap: viewModel.continueAction,
-                buttonState: viewModel.buttonState
-            )
-            .padding()
-            .padding(.horizontal)
-            
-            bottomContent
+            VStack(spacing: 16) {
+                OnboardingButton(
+                    onTap: viewModel.continueAction,
+                    buttonState: viewModel.buttonState
+                )
                 .padding(.horizontal)
-                .frame(height: 25)
+                
+                bottomContent
+                    .frame(height: 25)
+            }
+            .padding()
         }
         .padding(.vertical)
         .background {
@@ -40,21 +48,24 @@ struct OnboardingView: View {
                 .scaledToFill()
                 .blur(radius: 10)
                 .overlay {
-                    Color.app.background
-                        .opacity(0.9)
+                    Color.app.backgroundGradient
+                        .opacity(0.96)
                 }
                 .ignoresSafeArea()
         }
-        .animation(.smooth, value: viewModel.currentPage)
-        .gesture(dragGesture)
+        .animation(.bouncy(duration: 0.6), value: viewModel.currentPage)
+        .gesture(dragGesture, isEnabled: viewModel.buttonState != .loading)
     }
     
     @ViewBuilder
     private var content: some View {
         OnboardingContentFabric.makeContent(for: viewModel.currentPage)
-            .frame(maxHeight: .infinity)
+            .id(viewModel.currentPage)
             .containerRelativeFrame(.horizontal)
-            .transition(.push(from: dragController.animationSide))
+            .frame(maxHeight: .infinity)
+            .offset(x: dragController.translation)
+            .transition(.push(from: dragController.dragDirection.opposite))
+            .animation(.bouncy(duration: 0.6), value: dragController.translation)
     }
     
     @ViewBuilder
@@ -69,19 +80,12 @@ struct OnboardingView: View {
     }
     
     private var dragGesture: some Gesture {
-        DragGesture(minimumDistance: 15)
+        DragGesture()
             .onChanged { value in
-                guard !dragController.isDragging else { return }
-                dragController.startDrag(value.translation)
-                
-                withAnimation(.smooth) {
-                    dragController.dragDirection == .leading
-                    ? viewModel.didDragForward()
-                    : viewModel.didDragBack()
-                }
+                dragController.onDragChange(value.translation)
             }
             .onEnded { _ in
-                dragController.endDrag()
+                dragController.onDragEnd()
             }
     }
 }

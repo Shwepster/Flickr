@@ -33,9 +33,9 @@ struct OnboardingButton: View {
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.extraLarge)
-        .tint(.app.lightPurple)
+        .tint(.app.extraLightPurple)
         .scaleEffect(isAnimating ? 1.05 : 1)
-        .shadow(color: .app.extraLightPurple.opacity(isAnimating ? 0.3 : 0.15), radius: 16)
+        .shadow(color: .app.tint.opacity(isAnimating ? 0.3 : 0.15), radius: 16)
         .if(buttonState != .purchase) {
             // this code will remove any animation that started before
             $0.animation(nil, value: isAnimating)
@@ -58,5 +58,16 @@ struct OnboardingButton: View {
         case .loading:
             "Loading"
         }
+    }
+}
+
+// Preview
+
+#Preview {
+    ZStack(alignment: .bottom) {
+        Color.app.backgroundGradient
+            .ignoresSafeArea()
+        OnboardingButton(onTap: {}, buttonState: .continue)
+            .padding()
     }
 }

@@ -21,6 +21,15 @@ extension View {
             self
         }
     }
+    
+    @ViewBuilder
+    func isRemoved(_ shouldRemove: Bool) -> some View {
+        if shouldRemove {
+            EmptyView()
+        } else {
+            self
+        }
+    }
 
     @ViewBuilder
     func ifLet<T>(_ value: T?, transform: (Self, T) -> some View) -> some View {

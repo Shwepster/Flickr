@@ -45,7 +45,7 @@ struct PhotoItemView: View {
                         .barImageModifier()
                 }
                 .buttonStyle(.borderless)
-                .tint(.app.extraLightPurple)
+                .tint(.app.tint)
             }
             
             Spacer()

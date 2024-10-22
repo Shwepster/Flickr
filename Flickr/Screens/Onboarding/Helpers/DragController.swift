@@ -9,20 +9,36 @@ import SwiftUI
 
 extension OnboardingView {
     struct DragController {
-        private(set) var isDragging = false
-        private(set) var dragDirection: Edge = .trailing
+        let onDrag: (Edge) -> Void
+        var translation: CGFloat = .zero
+        private(set) var dragDirection: Edge = .leading
+        private let dragThreshold: CGFloat = 100
+        private var isDragPossible = true
         
-        var animationSide: Edge {
-            isDragging ? dragDirection.opposite : .trailing
+        init(onDrag: @escaping (Edge) -> Void) {
+            self.onDrag = onDrag
         }
         
-        mutating func startDrag(_ translation: CGSize) {
-            isDragging = true
+        mutating func onDragChange(_ translation: CGSize) {
+            guard isDragPossible else { return }
             dragDirection = translation.width > 0 ? .trailing : .leading
+            self.translation = translation.width
+            
+            if abs(translation.width) > dragThreshold {
+                onDrag(dragDirection)
+                finishDrag()
+            }
         }
         
-        mutating func endDrag() {
-            isDragging = false
+        mutating private func finishDrag() {
+            isDragPossible = false
+            translation = .zero
+        }
+        
+        mutating func onDragEnd() {
+            translation = .zero
+            dragDirection = .leading
+            isDragPossible = true
         }
     }
 }

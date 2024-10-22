@@ -26,7 +26,7 @@ struct SearchableMainListView: View {
                 .animation(.easeInOut.speed(2), value: isFocused)
         }
         .onAppear { viewModel.onAppear() }
-        .tint(.app.extraLightPurple)
+        .tint(.app.tint)
     }
     
     @ViewBuilder
