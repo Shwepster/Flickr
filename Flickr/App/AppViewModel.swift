@@ -16,7 +16,7 @@ extension FlickrApp {
         @ServiceLocator(.singleton) private var campaignMediator: CampaignViewMediator
         private var cancellables: Set<AnyCancellable> = []
         
-        init(showOnboarding: Bool = false) {
+        init(showOnboarding: Bool = true) {
             if showOnboarding {
                 onboardingVM = .init(
                     datasource: [

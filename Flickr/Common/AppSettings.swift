@@ -8,7 +8,7 @@
 import Foundation
 
 struct AppSettings {
-    static let photosPerPage = 5
+    static let photosPerPage = 10
     static let photoSize = PhotoSize.b
     static var croppSize: CGSize {
         .init(width: 350, height: 350)

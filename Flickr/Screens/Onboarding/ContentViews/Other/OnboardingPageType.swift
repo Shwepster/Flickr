@@ -22,3 +22,25 @@ extension OnboardingView {
         }
     }
 }
+
+//MARK: - Hashable
+
+extension OnboardingView.OnboardingPageType: Hashable {
+    func hash(into hasher: inout Hasher) {
+        switch self {
+        case .welcome(let model):
+            hasher.combine(model.title)
+            hasher.combine(model.description)
+        case .features(let model):
+            hasher.combine(model.features)
+            hasher.combine(model.title)
+            hasher.combine(model.bottomText)
+        case .purchase(let model):
+            hasher.combine(model.title)
+            hasher.combine(model.price)
+        case .image(let model):
+            hasher.combine(model.text)
+            hasher.combine(model.title)
+        }
+    }
+}

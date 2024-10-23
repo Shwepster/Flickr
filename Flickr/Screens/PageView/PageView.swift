@@ -35,6 +35,7 @@ struct PageView: View {
     
     @ViewBuilder
     private func view(for photo: PhotoItemView.ViewModel) -> some View {
+        //TODO: Handle when no image
         if let image = photo.image {
             image
                 .resizable()

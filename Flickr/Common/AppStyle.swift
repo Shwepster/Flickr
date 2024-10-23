@@ -12,7 +12,7 @@ enum AppStyle {
     static var secondaryBackground: Color { lightPurple }
     static var barBackground: Color { background.mix(with: .black, by: 0.1) }
     
-    static var backgroundGradient: some ShapeStyle {
+    static var backgroundGradient: LinearGradient {
         LinearGradient(colors: [barBackground, secondaryBackground], startPoint: .top, endPoint: .bottom)
     }
     
@@ -25,6 +25,10 @@ enum AppStyle {
     }
     
     static var extraLightPurple: Color {
+        .purple.mix(with: .black, by: 0.3)
+    }
+    
+    static var tint: Color {
         .purple.mix(with: .white, by: 0.5)
     }
     

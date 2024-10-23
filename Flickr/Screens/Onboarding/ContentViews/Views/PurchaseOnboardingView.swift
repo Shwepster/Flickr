@@ -13,23 +13,27 @@ struct PurchaseOnboardingView: View {
     let images: [Image]
     
     var body: some View {
-        if features.isNotEmpty {
-            FeaturesOnboardingView(features: features, images: images)
-        } else {
-            Spacer()
-        }
-        
-        VStack(spacing: 12) {
-            Image(systemName: "cart")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .foregroundStyle(.app.extraLightPurple)
+        VStack(spacing: 20) {
+            if features.isNotEmpty {
+                FeaturesOnboardingView(features: features, images: images)
+            } else {
+                Spacer()
+            }
             
-            Text("Purchase for only \(price.formatted(.currency(code: "USD")))")
-                .font(.title2)
-                .italic()
+            VStack {
+                Spacer() //somehow this fixes all layout problems
+                Image(.placeholder)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundStyle(.app.tint)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                
+                Text("Purchase for only \(price.formatted(.currency(code: "USD")))")
+                    .font(.title2)
+                    .italic()
+            }
+            .padding(.horizontal)
         }
-        .padding()
     }
 }
 
