@@ -68,9 +68,7 @@ struct EditorView: View {
 
 #Preview {
     @Previewable @StateObject var viewModel: EditorView.ViewModel = .init(
-        photoViewModel: PhotoItemView.ViewModel(
-            photo: .test
-        )
+        photo: .init(photo: .test)
     )
 
     EditorView(viewModel: viewModel)

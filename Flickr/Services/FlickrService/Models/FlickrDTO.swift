@@ -22,7 +22,6 @@ struct PageDTO: Codable {
 }
 
 struct PhotoDTO: Codable {
-    let iterationId = UUID().uuidString
     let id: String
     let owner: String
     let secret: String

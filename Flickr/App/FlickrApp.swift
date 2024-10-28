@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct FlickrApp: App {
-    @StateObject private var viewModel = ViewModel()
+    @StateObject private var viewModel = ViewModel(showOnboarding: false)
     
     init() {
         AppServicesRegistrator.registerAllServices()

@@ -9,6 +9,7 @@ import Foundation
 
 enum AppServicesRegistrator {
     static func registerAllServices() {
+        registerPhotoStorage()
         registerCampaignMediator()
         registerLogger()
         registerHistoryStorage()
@@ -22,6 +23,10 @@ enum AppServicesRegistrator {
     }
     
     // MARK: - Individual registrations
+    private static func registerPhotoStorage() {
+        ServiceContainer.register(PhotoStorage.self, factory: PhotoStorage())
+    }
+    
     private static func registerCampaignMediator() {
         ServiceContainer.register(CampaignViewMediator.self, factory: CampaignViewMediator())
     }
