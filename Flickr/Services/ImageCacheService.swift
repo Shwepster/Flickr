@@ -23,7 +23,6 @@ actor ImageCacheService {
                 
         do {
             try data.write(to: url)
-            print("File saved to cache: \(url.lastPathComponent)")
         } catch {
             print("Failed to save file: \(error)")
         }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PhotoItemView: View {
     @ObservedObject var viewModel: ViewModel
+    let contentMode: ContentMode
     
     var body: some View {
         ZStack {
@@ -57,7 +58,7 @@ struct PhotoItemView: View {
         GeometryReader { geometry in
             image
                 .resizable()
-                .aspectRatio(contentMode: .fill)
+                .aspectRatio(contentMode: contentMode)
                 .frame(
                     width: geometry.size.width,
                     height: geometry.size.height
@@ -95,7 +96,7 @@ struct PhotoItemView: View {
                 .bold()
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 10)
+                .padding(10)
                 .background(.black.opacity(0.5))
         }
     }
@@ -115,9 +116,11 @@ fileprivate extension Image {
 // MARK: - Preview
 
 #Preview {
-    @Previewable @StateObject var viewModel: PhotoItemView.ViewModel = .init(photo: .test)
+    @Previewable @StateObject var viewModel: PhotoItemView.ViewModel = .init(
+        photo: .init(photo: .test, image: .init(.placeholder))
+    )
     
-    PhotoItemView(viewModel: viewModel)
+    PhotoItemView(viewModel: viewModel, contentMode: .fill)
         .aspectRatio(contentMode: .fit)
         .frame(height: 500)
 }

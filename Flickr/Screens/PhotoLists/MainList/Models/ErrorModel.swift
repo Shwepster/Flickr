@@ -5,7 +5,7 @@
 //  Created by Maxim Vynnyk on 21.10.2024.
 //
 
-extension MainListView.ViewModel {
+extension PhotoListViewModel {
     struct ErrorModel {
         var isErrorPresented = false {
             didSet {

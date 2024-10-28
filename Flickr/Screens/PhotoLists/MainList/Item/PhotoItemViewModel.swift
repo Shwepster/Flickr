@@ -6,45 +6,50 @@
 //
 
 import SwiftUI
+import Synchronization
 
 extension PhotoItemView {
     @MainActor
-    final class ViewModel: ObservableObject, Identifiable {
+    final class ViewModel: ObservableObject {
         typealias ViewModel = PhotoItemView.ViewModel
         @Published var image: Image?
         let title: String
-        nonisolated var photoId: String { photo.id }
-        nonisolated var id: String { photo.iterationId }
-        nonisolated private let photo: PhotoDTO
+        nonisolated var photo: PhotoModel { _photo.withLock { $0 } }
+        private let _photo: Mutex<PhotoModel>
         nonisolated private let photoService: PhotoService
+        private let photoStorage: PhotoStorage
         private let photoSize = AppSettings.photoSize
         private let onDeleteCallback: (ViewModel) -> Void
         private let onEditCallback: (ViewModel) -> Void
         private let onSelectCallback: (ViewModel) -> Void
         
         init(
-            photo: PhotoDTO,
+            photo: PhotoModel,
             onDelete: @escaping (ViewModel) -> Void = { _ in },
             onEdit: @escaping (ViewModel) -> Void = { _ in },
             onSelect: @escaping (ViewModel) -> Void = { _ in }
         ) {
-            self.photo = photo
+            self._photo = .init(photo)
+            self.image = photo.image
+            self.title = (photo.photo.title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
             self.onDeleteCallback = onDelete
             self.onEditCallback = onEdit
             self.onSelectCallback = onSelect
-            self.title = (photo.title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
             
             do {
                 photoService = try ServiceContainer.resolve(lifetime: .singleton)
+                photoStorage = try ServiceContainer.resolve(lifetime: .singleton)
             } catch {
-                fatalError("Failed to resolve photo service: \(error)")
+                fatalError("Failed to resolve service: \(error)")
             }
         }
         
         deinit {
-            photoService.cancelPhotoLoading(for: photo)
+            photoService.cancelPhotoLoading(for: photo.photo)
             print("Photo item view model deinitialized")
         }
+        
+        // MARK: - Actions
         
         func onCreated() async {
             if image == nil {
@@ -64,11 +69,19 @@ extension PhotoItemView {
             onSelectCallback(self)
         }
         
+        // MARK: - Other
+        
+        func updatePhoto(_ photo: PhotoModel) {
+            self._photo.withLock { $0 = photo }
+            image = photo.image
+        }
+        
         // MARK: - Private
         
         private func loadImage() async {
-            let imageTask = Task.detached { [photo, photoSize, photoService] in
-                await photoService.loadImage(for: photo, size: photoSize)
+            var photo = _photo.withLock { $0 }
+            let imageTask = Task.detached { [photoSize, photoService] in
+                await photoService.loadImage(for: photo.photo, size: photoSize)
             }
             
             if let uiImage = await imageTask.value {
@@ -76,8 +89,17 @@ extension PhotoItemView {
             } else {
                 image = Image(systemName: "photo.circle.fill")
             }
+            
+            photo.image = image
+            _photo.withLock { $0 = photo }
+            await photoStorage.updatePhoto(photo)
         }
     }
+}
+
+// MARK: - Protocols
+extension PhotoItemView.ViewModel: Identifiable {
+    nonisolated var id: String { photo.iterationId }
 }
 
 extension PhotoItemView.ViewModel: Equatable {
@@ -88,6 +110,6 @@ extension PhotoItemView.ViewModel: Equatable {
 
 extension PhotoItemView.ViewModel: Hashable {
     nonisolated func hash(into hasher: inout Hasher) {
-        hasher.combine(photo.id)
+        hasher.combine(id)
     }
 }

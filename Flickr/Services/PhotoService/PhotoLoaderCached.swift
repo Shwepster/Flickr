@@ -19,7 +19,7 @@ struct PhotoLoaderCached: PhotoLoader {
     // MARK: - Public
     
     func loadImage(for photo: PhotoDTO, size: PhotoSize) async -> UIImage? {
-        let photoId = id(for: photo, size: size)
+        let photoId = ImageCacheService.id(for: photo, size: size)
         
         if let image = await cacheService.getImage(for: photoId) {
             return image
@@ -35,10 +35,14 @@ struct PhotoLoaderCached: PhotoLoader {
         
         return image
     }
-    
-    // MARK: - Private
-    
-    private func id(for photo: PhotoDTO, size: PhotoSize) -> String {
-        "\(photo.id)_\(size.rawValue)"
+}
+
+extension ImageCacheService {
+    static func id(for photo: PhotoDTO, size: PhotoSize? = nil) -> String {
+        if let size {
+            "\(photo.id)_\(size.rawValue)"
+        } else {
+            photo.id
+        }
     }
 }
