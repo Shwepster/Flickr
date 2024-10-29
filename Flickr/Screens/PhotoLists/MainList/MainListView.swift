@@ -24,14 +24,9 @@ struct MainListView: View {
                         : "square.split.1x2.fill"
                     )
                 }
-
             }
             .task {
                 await viewModel.onCreate()
-            }
-            .sheet(item: $viewModel.editingViewModel) { viewModel in
-                EditorView(viewModel: viewModel)
-                    .presentationDetents(.init([.fraction(0.7)]))
             }
             .alert(isPresented: $viewModel.errorModel.isErrorPresented, error: viewModel.errorModel.errorMessage) {
                 Button("Retry") {
@@ -40,13 +35,19 @@ struct MainListView: View {
                     }
                 }
             }
+            .bindToNavigation(viewModel.$navigation)
     }
+    
+    // MARK: - Subviews
     
     @ViewBuilder
     private var content: some View {
         if viewModel.isPageView {
-            PageView(photoViewModels: viewModel.photoViewModels, onPaginate: viewModel.onPaginate)
-                .navigationBarTitleDisplayMode(.inline)
+            PageView(
+                photoViewModels: viewModel.photoViewModels,
+                onPaginate: viewModel.onPaginate
+            )
+            .navigationBarTitleDisplayMode(.inline)
         } else {
             ListView(
                 photoViewModels: viewModel.photoViewModels,

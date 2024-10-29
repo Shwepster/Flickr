@@ -9,10 +9,8 @@ import Foundation
 
 extension MainListView {
     final class ViewModel: PhotoListViewModel {
-        @Published var editingViewModel: EditorView.ViewModel?
-        @Published var pageViewModel: PageView.ViewModel?
-        @Published var isPageView = true
-                
+        @Published var isPageView = false
+        
         func toggleViewType() {
             isPageView.toggle()
         }
@@ -22,14 +20,20 @@ extension MainListView {
                 PhotoItemView.ViewModel(photo: $0) { [weak self] viewModel in
                     self?.deletePhoto(viewModel: viewModel)
                 } onEdit: { [weak self] viewModel in
-                    self?.editingViewModel = .init(photo: viewModel.photo)
+                    self?.showEdit(for: viewModel)
                 } onSelect: { [weak self] viewModel in
-                    guard let self else { return }
-                    let pageViewModel = PageView.ViewModel()
-                    pageViewModel.currentPhoto = viewModel
-                    self.pageViewModel = pageViewModel
+                    self?.showEdit(for: viewModel)
                 }
             }
+        }
+        
+        // MARK: - Private
+        private func showEdit(for viewModel: PhotoItemView.ViewModel) {
+            let route = Route(
+                screen: .editPhoto(viewModel.photo),
+                settings: .init(presentationDetents: [.fraction(0.7)])
+            )
+            navigation = .present(route)
         }
     }
 }

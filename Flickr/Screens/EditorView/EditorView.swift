@@ -9,7 +9,6 @@ import SwiftUI
 
 struct EditorView: View {
     @StateObject private var viewModel: ViewModel
-    @Environment(\.dismiss) private var dismiss
     
     init(viewModel: ViewModel) {
         _viewModel = .init(wrappedValue: viewModel)
@@ -23,10 +22,10 @@ struct EditorView: View {
         }
         .padding()
         .background(.app.background)
-        .onChange(of: viewModel.needsDismiss) {
-            dismiss()
-        }
+        .bindToNavigation(viewModel.$navigation)
     }
+    
+    // MARK: - Subviews
     
     @ViewBuilder
     private var editorImage: some View {

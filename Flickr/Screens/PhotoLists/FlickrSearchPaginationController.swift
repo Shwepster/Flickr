@@ -26,6 +26,7 @@ final class FlickrSearchPaginationControllerDefault: FlickrSearchPaginationContr
     
     /// Lock date to time when first page was loaded.
     /// This will avoid duplicating photos in next pages when new photo was added on the server
+    /// - In reality API does not care
     private var maxUploadDate = Date()
     
     init(perPage: Int = 20) {

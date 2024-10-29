@@ -11,40 +11,43 @@ import Combine
 extension FlickrApp {
     @MainActor
     final class ViewModel: ObservableObject {
-        @Published var isCampaignPresented: Bool = false
-        @Published private(set) var onboardingVM: OnboardingView.ViewModel?
+        @Published var navigation: NavigationType?
+        @Published private(set) var rootRouter = Router(parentRouter: nil, rootRoute: .init(screen: .main))
         @ServiceLocator(.singleton) private var campaignMediator: CampaignViewMediator
         private var cancellables: Set<AnyCancellable> = []
         
-        init(showOnboarding: Bool = true) {
+        init(showOnboarding: Bool = true) {            
             if showOnboarding {
-                onboardingVM = .init(
-                    datasource: [
-                        OnboardingView.OnboardingDatasourceNew(),
-                        OnboardingView.OnboardingDatasourceDefault()
-                    ].randomElement()!,
-                    onPurchase: { [unowned self] in
-                        self.onboardingVM = nil
-                    })
+                let screen: Route.Screen = .onboarding(OnboardingView.OnboardingDatasourceNew()) { [weak self] in
+                    self?.rootRouter.rootRoute = .init(screen: .main)
+                }
+                
+                rootRouter.rootRoute = .init(screen: screen)
             }
+            
+            rootRouter.objectWillChange
+                .sink { [weak self] _ in
+                    self?.objectWillChange.send()
+                }
+                .store(in: &cancellables)
+            
+            clearCache()
         }
         
         func onCreated() {
-            campaignMediator.campaignSubject.sink { [weak self] campaign in
-                self?.isCampaignPresented = true
-            }.store(in: &cancellables)
+            campaignMediator.navigation
+                .sink { [weak self] navigation in
+                    self?.navigation = navigation
+                }
+                .store(in: &cancellables)
         }
         
-        func onCampaignDismiss() {
-            campaignMediator.campaignDidEnd()
-        }
+        // MARK: - Private
         
-        @ViewBuilder
-        func getCampaignView() -> some View {
-            if let view = campaignMediator.getView() {
-                AnyView(view)
-            } else {
-                EmptyView()
+        private func clearCache() {
+            @ServiceLocator var cacheService: ImageCacheService
+            Task(priority: .high) {
+                await cacheService.clearCache()
             }
         }
     }

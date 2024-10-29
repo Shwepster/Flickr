@@ -25,6 +25,7 @@ actor CampaignManager {
         }
     }
     
+    // MARK: - Private
     private func removeActiveCampaign() {
         activeCampaign = nil
         cancellables.removeAll()

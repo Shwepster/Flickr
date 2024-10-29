@@ -13,7 +13,8 @@ extension EditorView {
     final class ViewModel: ObservableObject, Identifiable {
         @Published var editedImage: Image
         @Published var hueRotation = 0.0
-        @Published var needsDismiss: Bool = false
+        @Published var navigation: NavigationType?
+        
         let angleRange = 0.0...360
         let id = UUID().uuidString
         private var photo: PhotoModel
@@ -22,24 +23,23 @@ extension EditorView {
         
         init(photo: PhotoModel) {
             self.photo = photo
-            self.editedImage = photo.image ?? .init(systemName: "pencil")
+            editedImage = photo.image?.asImage() ?? .init(systemName: "pencil")
         }
         
         func onSave() {
-            logger.logEvent(.special)
-            
             let uiImage = editedImage
                 .hueRotation(.degrees(hueRotation))
                 .asUIImage()
             
             if let uiImage {
                 Task {
-                    photo.image = Image(uiImage: uiImage)
+                    photo.image = uiImage
                     await photoStorage.updatePhoto(photo)
                 }
             }
             
-            needsDismiss = true
+            navigation = .dismiss
+            logger.logEvent(.special)
         }
     }
 }

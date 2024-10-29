@@ -36,7 +36,8 @@ struct ListView: View {
         }
     }
     
-    // MARK: - Views
+    // MARK: - Subiews
+    
     @ViewBuilder
     private var loadingItem: some View {
         switch state {

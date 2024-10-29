@@ -10,8 +10,9 @@ import SwiftUI
 
 /// Responsible for creating `View` for `Campaign` and managing its presentation
 final class CampaignViewMediator: @unchecked Sendable {
-    let campaignSubject = PassthroughSubject<Campaign, Never>()
+    var navigation = CurrentValueSubject<NavigationType?, Never>(nil)
     // left this as a reminder that marking closure @Sendable is important
+    // because even without warning it can crash
     // var callback: (@Sendable () -> Void)?
     private var currentCampaign: Campaign?
     private var onCampaignDismiss: (@Sendable () -> Void)?
@@ -20,18 +21,19 @@ final class CampaignViewMediator: @unchecked Sendable {
     func showCampaign(_ campaign: Campaign, onDismiss: @Sendable @escaping () -> Void) {
         currentCampaign = campaign
         onCampaignDismiss = onDismiss
-        campaignSubject.send(campaign)
+        
+        let view = campaign.buildView()
+        let route: Route = .init(screen: .campaign(view)) { [weak self] in
+            self?.campaignDidEnd()
+        }
+        
+        navigation.send(.pushOnTop(route))
     }
     
     @MainActor
-    func campaignDidEnd() {
+    private func campaignDidEnd() {
         onCampaignDismiss?()
         onCampaignDismiss = nil
         currentCampaign = nil
-    }
-    
-    @MainActor
-    func getView() -> (any View)? {
-        currentCampaign?.buildView()
     }
 }

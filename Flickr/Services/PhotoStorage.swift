@@ -64,11 +64,11 @@ actor PhotoStorage {
 }
 
 // MARK: - PhotoModel
-struct PhotoModel: Equatable {
+struct PhotoModel: Equatable, Hashable {
     /// ID for UI iteration, for Photo id use `photo`
     let iterationId = UUID().uuidString
     let photo: PhotoDTO
-    var image: Image?
+    var image: UIImage?
     
     static func == (lhs: PhotoModel, rhs: PhotoModel) -> Bool {
         lhs.photo.id == rhs.photo.id

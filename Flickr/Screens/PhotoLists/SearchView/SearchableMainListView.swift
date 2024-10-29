@@ -24,11 +24,13 @@ struct SearchableMainListView: View {
                     }
                 }
                 .animation(.easeInOut.speed(2), value: isFocused)
+                .background(.app.backgroundGradient)
         }
-        .background(.app.backgroundGradient)
         .tint(.app.tint)
         .onAppear { viewModel.onAppear() }
     }
+    
+    // MARK: - Subview
     
     @ViewBuilder
     private var suggestionsView: some View {

@@ -19,6 +19,8 @@ struct FeaturesOnboardingView: View {
         }
     }
     
+    // MARK: - Subviews
+    
     @ViewBuilder
     private var featureList: some View {
         VStack {
