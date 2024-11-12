@@ -12,6 +12,7 @@ class PhotoListViewModel: ObservableObject {
     @Published var photoViewModels: [PhotoItemView.ViewModel] = []
     @Published var state: State = .idle
     @Published var errorModel = ErrorModel()
+    @Published var navigation: NavigationType?
     private let paginationController: FlickrSearchPaginationController
     private let photoMapper = PhotoModelMapper()
     @ServiceLocator(.singleton) private var photoStorage: PhotoStorage
@@ -67,7 +68,6 @@ class PhotoListViewModel: ObservableObject {
             let updateStream = await photoStorage.observePhotoUpdates()
             
             for await event in updateStream {
-                print("Photo updated: \(event)")
                 handlePhotoUpdateEvent(event)
             }
         }

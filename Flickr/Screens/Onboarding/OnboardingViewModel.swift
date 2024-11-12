@@ -13,14 +13,14 @@ extension OnboardingView {
         @Published private(set) var buttonState: ButtonState = .continue
         @Published private(set) var currentPage: OnboardingPageType
         private var currentPageNumber: Int = 0
-        private let datasource: OnboardingDatasource
+        private let dataSource: OnboardingDataSource
         private let onPurchase: () -> Void
         @ServiceLocator(.singleton) private var logger: FlickrLogger
         
-        init(datasource: OnboardingDatasource, onPurchase: @escaping () -> Void = {}) {
-            self.datasource = datasource
+        init(dataSource: OnboardingDataSource, onPurchase: @escaping () -> Void = {}) {
+            self.dataSource = dataSource
             self.onPurchase = onPurchase
-            self.currentPage = datasource.pages.first!
+            self.currentPage = dataSource.pages.first!
         }
         
         private(set) lazy var termsAction: () -> Void = {
@@ -59,12 +59,12 @@ extension OnboardingView {
         // MARK: - Private
         
         private func openPage(_ pageNumber: Int) {
-            guard pageNumber < datasource.pages.count, pageNumber >= 0 else { return }
+            guard pageNumber < dataSource.pages.count, pageNumber >= 0 else { return }
             
             currentPageNumber = pageNumber
-            currentPage = datasource.pages[pageNumber]
+            currentPage = dataSource.pages[pageNumber]
             
-            if pageNumber == datasource.pages.count - 1 {
+            if pageNumber == dataSource.pages.count - 1 {
                 buttonState = .purchase
             } else {
                 buttonState = .continue
@@ -75,6 +75,7 @@ extension OnboardingView {
             buttonState = .loading
             
             Task {
+                // imitate purchase
                 try await Task.sleep(for: .seconds(1))
                 onPurchase()
             }

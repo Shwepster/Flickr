@@ -7,8 +7,7 @@
 
 import Foundation
 
-// Currently unused
-extension PageView {
+extension PageViewScreen {
     @MainActor
     final class ViewModel: PhotoListViewModel, Identifiable {
         let id: String = UUID().uuidString
@@ -25,10 +24,10 @@ extension PageView {
             models.map {
                 PhotoItemView.ViewModel(photo: $0) { [weak self] viewModel in
                     self?.deletePhoto(viewModel: viewModel)
-                } onEdit: { _ in
-                    
+                } onEdit: { [weak self] viewModel in
+                    self?.navigation = .push(.init(screen: .main))
                 } onSelect: { [weak self] viewModel in
-                    self?.editingViewModel = .init(photo: viewModel.photo)
+                    self?.navigation = .push(.init(screen: .editPhoto(viewModel.photo)))
                 }
             }
         }

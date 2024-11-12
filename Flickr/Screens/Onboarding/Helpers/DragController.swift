@@ -30,15 +30,15 @@ extension OnboardingView {
             }
         }
         
-        mutating private func finishDrag() {
-            isDragPossible = false
-            translation = .zero
-        }
-        
         mutating func onDragEnd() {
             translation = .zero
             dragDirection = .leading
             isDragPossible = true
+        }
+        
+        mutating private func finishDrag() {
+            isDragPossible = false
+            translation = .zero
         }
     }
 }

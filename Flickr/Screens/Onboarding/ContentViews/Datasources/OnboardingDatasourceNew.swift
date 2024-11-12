@@ -6,7 +6,7 @@
 //
 
 extension OnboardingView {
-    struct OnboardingDatasourceNew: OnboardingDatasource {
+    struct OnboardingDatasourceNew: OnboardingDataSource {
         let pages: [OnboardingPageType]
         
         init() {

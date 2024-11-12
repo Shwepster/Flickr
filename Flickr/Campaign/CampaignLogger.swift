@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Passes events to trigger campaings
 final class CampaignLogger: FlickrLogger {
     private let campaignManager = CampaignManager()
     private let logger: FlickrLogger

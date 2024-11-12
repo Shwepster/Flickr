@@ -30,6 +30,7 @@ struct CampaignStorage {
         return factory()
     }
     
+    // MARK: - Private
     private static func createCampaigns() -> (EventsMap, Factories) {
         var eventsMap: EventsMap = [:]
         var factories: Factories = [:]

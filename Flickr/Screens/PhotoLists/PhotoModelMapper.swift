@@ -18,11 +18,11 @@ struct PhotoModelMapper {
         }
     }
     
-    private func getImage(for photo: PhotoDTO) async -> Image? {
+    private func getImage(for photo: PhotoDTO) async -> UIImage? {
         let imageId = ImageCacheService.id(for: photo, size: photoSize)
 
         if let image = await cacheManager.getImage(for: imageId) {
-            return Image(uiImage: image)
+            return image
         }
         
         return nil

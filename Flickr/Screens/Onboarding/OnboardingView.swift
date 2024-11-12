@@ -57,6 +57,8 @@ struct OnboardingView: View {
         .gesture(dragGesture, isEnabled: viewModel.buttonState != .loading)
     }
     
+    // MARK: - Subviews
+    
     @ViewBuilder
     private var content: some View {
         OnboardingContentFabric.makeContent(for: viewModel.currentPage)
@@ -92,7 +94,7 @@ struct OnboardingView: View {
 
 #Preview {
     @Previewable @StateObject var viewModel = OnboardingView.ViewModel(
-        datasource: OnboardingView.OnboardingDatasourceDefault()
+        dataSource: OnboardingView.OnboardingDatasourceDefault()
     )
    
     OnboardingView(viewModel: viewModel)
@@ -100,7 +102,7 @@ struct OnboardingView: View {
 
 #Preview {
     @Previewable @StateObject var viewModel = OnboardingView.ViewModel(
-        datasource: OnboardingView.OnboardingDatasourceNew()
+        dataSource: OnboardingView.OnboardingDatasourceNew()
     )
     
     OnboardingView(viewModel: viewModel)

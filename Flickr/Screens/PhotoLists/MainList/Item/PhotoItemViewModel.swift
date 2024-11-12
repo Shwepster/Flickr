@@ -30,7 +30,7 @@ extension PhotoItemView {
             onSelect: @escaping (ViewModel) -> Void = { _ in }
         ) {
             self._photo = .init(photo)
-            self.image = photo.image
+            self.image = photo.image?.asImage()
             self.title = (photo.photo.title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
             self.onDeleteCallback = onDelete
             self.onEditCallback = onEdit
@@ -73,7 +73,7 @@ extension PhotoItemView {
         
         func updatePhoto(_ photo: PhotoModel) {
             self._photo.withLock { $0 = photo }
-            image = photo.image
+            image = photo.image?.asImage()
         }
         
         // MARK: - Private
@@ -85,12 +85,13 @@ extension PhotoItemView {
             }
             
             if let uiImage = await imageTask.value {
+                photo.image = uiImage
                 image = Image(uiImage: uiImage)
             } else {
                 image = Image(systemName: "photo.circle.fill")
+                photo.image = image?.asUIImage()
             }
             
-            photo.image = image
             _photo.withLock { $0 = photo }
             await photoStorage.updatePhoto(photo)
         }

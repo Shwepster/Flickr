@@ -14,41 +14,21 @@ struct FlickrApp: App {
     init() {
         AppServicesRegistrator.registerAllServices()
         configureNavigationBarAppearance()
-        clearCache()
     }
     
     var body: some Scene {
         WindowGroup {
             ZStack {
                 Color.clear
-                getContentView()
+                viewForRoute(viewModel.rootRouter.rootRoute)
             }
-            .animation(.smooth, value: viewModel.onboardingVM == nil)
+            .bindToNavigation(viewModel.$navigation)
+            .setupNavigation(using: viewModel.rootRouter) // must be before binding
+            .animation(.smooth, value: viewModel.rootRouter.rootRoute)
             .preferredColorScheme(.dark) // Force Dark Mode for the entire app
-            .sheet(isPresented: $viewModel.isCampaignPresented) {
-                viewModel.onCampaignDismiss()
-            } content: {
-                viewModel.getCampaignView()
-            }
             .task {
                 viewModel.onCreated()
             }
-        }
-    }
-    
-    @ViewBuilder
-    private func getContentView() -> some View {
-        if let viewModel = viewModel.onboardingVM {
-            OnboardingView(viewModel: viewModel)
-        } else {
-            SearchableMainListView()
-        }
-    }
-    
-    private func clearCache() {
-        @ServiceLocator var cacheService: ImageCacheService
-        Task(priority: .high) {
-            await cacheService.clearCache()
         }
     }
     

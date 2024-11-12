@@ -31,6 +31,10 @@ final class SpecialOfferCampaign: Campaign, @unchecked Sendable {
         }
     }
     
+    func canBeShown() -> Bool {
+        true
+    }
+    
     @ViewBuilder
     func buildView() -> any View {
         Color.yellow

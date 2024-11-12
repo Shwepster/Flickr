@@ -25,14 +25,7 @@ struct PageView: View {
             .contentMargins(20)
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.viewAligned)
-//            .ifLet(currentPhoto) { view, photo in
-//                view.onChange(of: photo) { oldValue, newValue in
-//                    scrollProxy.scrollTo(newValue.id)
-//                }
-//            }
         }
-        .background(.app.backgroundGradient)
-        .swipeToDismiss()
         .task {
             currentPhoto = photoViewModels.first
         }
@@ -67,6 +60,6 @@ struct PageView: View {
 }
 
 #Preview {
-    @Previewable @StateObject var viewModel = PageView.ViewModel()
+    @Previewable @StateObject var viewModel = PageViewScreen.ViewModel()
     PageView(photoViewModels: viewModel.photoViewModels, onPaginate: viewModel.onPaginate)
 }
