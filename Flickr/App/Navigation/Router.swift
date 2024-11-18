@@ -29,6 +29,10 @@ final class Router: ObservableObject, Identifiable {
     }
     
     // MARK: - Actions
+    func replaceRoot(with route: Route) {
+        rootRoute = route
+    }
+    
     func addRoute(_ route: Route) {
         routes.append(route)
     }
@@ -62,6 +66,8 @@ final class Router: ObservableObject, Identifiable {
         parentRouter?.fullScreenRouter = nil
         parentRouter?.sheetRouter = nil
     }
+    
+    // MARK: - Helpers
     
     func getTopRouter() -> Router {
         let top = fullScreenRouter ?? sheetRouter

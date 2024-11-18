@@ -12,14 +12,14 @@ extension OnboardingView {
     final class ViewModel: ObservableObject {
         @Published private(set) var buttonState: ButtonState = .continue
         @Published private(set) var currentPage: OnboardingPageType
+        
         private var currentPageNumber: Int = 0
         private let dataSource: OnboardingDataSource
-        private let onPurchase: () -> Void
         @ServiceLocator(.singleton) private var logger: FlickrLogger
+        @ServiceLocator(.singleton) private var purchaseService: PurchaseService
         
-        init(dataSource: OnboardingDataSource, onPurchase: @escaping () -> Void = {}) {
+        init(dataSource: OnboardingDataSource) {
             self.dataSource = dataSource
-            self.onPurchase = onPurchase
             self.currentPage = dataSource.pages.first!
         }
         
@@ -75,9 +75,11 @@ extension OnboardingView {
             buttonState = .loading
             
             Task {
-                // imitate purchase
-                try await Task.sleep(for: .seconds(1))
-                onPurchase()
+                do {
+                    try await purchaseService.purchase()
+                } catch {
+                    print(error)
+                }
             }
         }
     }

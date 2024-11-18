@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct FlickrApp: App {
-    @StateObject private var viewModel = ViewModel(showOnboarding: false)
+    @StateObject private var viewModel = ViewModel(showOnboarding: true)
     
     init() {
         AppServicesRegistrator.registerAllServices()
@@ -20,7 +20,7 @@ struct FlickrApp: App {
         WindowGroup {
             ZStack {
                 Color.clear
-                viewForRoute(viewModel.rootRouter.rootRoute)
+                viewModel.rootRouter.rootRoute.screen
             }
             .bindToNavigation(viewModel.$navigation)
             .setupNavigation(using: viewModel.rootRouter) // must be before binding

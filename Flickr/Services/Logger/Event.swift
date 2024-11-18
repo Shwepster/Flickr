@@ -9,4 +9,5 @@ enum Event: String {
     case promo
     case search
     case special
+    case purchaseCompleted
 }
