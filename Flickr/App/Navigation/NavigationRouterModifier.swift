@@ -14,7 +14,7 @@ struct NavigationRouterModifier: ViewModifier {
         NavigationStack(path: $router.routes) {
             content
                 .navigationDestination(for: Route.self) { newRoute in
-                    viewForRoute(newRoute)
+                    newRoute.screen
                 }
         }
         .onNavigate { action in
@@ -34,7 +34,7 @@ struct NavigationRouterModifier: ViewModifier {
     
     @ViewBuilder
     private func viewForRouter(_ router: Router) -> some View {
-        viewForRoute(router.rootRoute)
+        router.rootRoute.screen
             .presentationBackground(router.rootRoute.settings.presentationBackground)
             .presentationDetents(router.rootRoute.settings.presentationDetents)
             .setupNavigation(using: router)
@@ -50,6 +50,8 @@ struct NavigationRouterModifier: ViewModifier {
             router.removeRoutes(upTo: route)
         case .present(let route):
             router.presentRoute(route)
+        case .replaceWith(let route):
+            router.replaceRoot(with: route)
         case .back:
             router.removeRoute()
         case .dismiss:
@@ -61,23 +63,5 @@ struct NavigationRouterModifier: ViewModifier {
 extension View {
     func setupNavigation(using router: Router) -> some View {
         modifier(NavigationRouterModifier(router: router))
-    }
-}
-
-@MainActor @ViewBuilder
-func viewForRoute(_ route: Route) -> some View {
-    switch route.screen {
-    case let .onboarding(dataSource, onPurchase):
-        let viewModel = OnboardingView.ViewModel(dataSource: dataSource, onPurchase: onPurchase)
-        OnboardingView(viewModel: viewModel)
-    case .main:
-        SearchableMainListView()
-    case .pageView:
-        PageViewScreen()
-    case .editPhoto(let photo):
-        let viewModel = EditorView.ViewModel(photo: photo)
-        EditorView(viewModel: viewModel)
-    case .campaign(let view):
-        AnyView(view)
     }
 }

@@ -22,6 +22,7 @@ enum NavigationType {
     case pushOnTop(Route) // pushed on top router
     case unwind(to: Route)
     case present(Route)
+    case replaceWith(Route)
     case back
     case dismiss
 }

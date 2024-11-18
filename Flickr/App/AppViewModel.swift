@@ -14,14 +14,12 @@ extension FlickrApp {
         @Published var navigation: NavigationType?
         @Published private(set) var rootRouter = Router(parentRouter: nil, rootRoute: .init(screen: .main))
         @ServiceLocator(.singleton) private var campaignMediator: CampaignViewMediator
+        @ServiceLocator(.singleton) private var purchaseService: PurchaseService
         private var cancellables: Set<AnyCancellable> = []
         
         init(showOnboarding: Bool = true) {            
             if showOnboarding {
-                let screen: Route.Screen = .onboarding(OnboardingView.OnboardingDatasourceNew()) { [weak self] in
-                    self?.rootRouter.rootRoute = .init(screen: .main)
-                }
-                
+                let screen: Route.Screen = .onboarding(OnboardingView.OnboardingDatasourceNew())
                 rootRouter.rootRoute = .init(screen: screen)
             }
             
@@ -38,6 +36,14 @@ extension FlickrApp {
             campaignMediator.navigation
                 .sink { [weak self] navigation in
                     self?.navigation = navigation
+                }
+                .store(in: &cancellables)
+            
+            purchaseService.isPurchased
+                .sink { [weak self] isPurchased in
+                    if isPurchased {
+                        self?.rootRouter.replaceRoot(with: .init(screen: .main))
+                    }
                 }
                 .store(in: &cancellables)
         }

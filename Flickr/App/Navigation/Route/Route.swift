@@ -19,7 +19,7 @@ struct Route {
     }
     
     enum Screen {
-        case onboarding(OnboardingView.OnboardingDataSource, () -> Void)
+        case onboarding(OnboardingView.OnboardingDataSource)
         case main
         case editPhoto(PhotoModel)
         case pageView
