@@ -64,9 +64,10 @@ extension OnboardingView {
             currentPageNumber = pageNumber
             currentPage = dataSource.pages[pageNumber]
             
-            if pageNumber == dataSource.pages.count - 1 {
+            switch currentPage {
+            case .purchase:
                 buttonState = .purchase
-            } else {
+            default:
                 buttonState = .continue
             }
         }
