@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F6BDF7E32D0C854E006E7AD8 /* FlickrWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = F6BDF7D62D0C854C006E7AD8 /* FlickrWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		F615281D2C9AEC53007FEDA7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -14,11 +18,33 @@
 			remoteGlobalIDString = F615280B2C9AEC51007FEDA7;
 			remoteInfo = Flickr;
 		};
+		F6BDF7E12D0C854E006E7AD8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F61528042C9AEC51007FEDA7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F6BDF7D52D0C854C006E7AD8;
+			remoteInfo = "FlickrWatch Watch App";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F6BDF7E42D0C854E006E7AD8 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				F6BDF7E32D0C854E006E7AD8 /* FlickrWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		F615280C2C9AEC51007FEDA7 /* Flickr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flickr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F615281C2C9AEC53007FEDA7 /* FlickrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlickrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6BDF7D62D0C854C006E7AD8 /* FlickrWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FlickrWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -29,11 +55,22 @@
 			);
 			target = F615281B2C9AEC53007FEDA7 /* FlickrTests */;
 		};
+		F6BDF7EA2D0C88D3006E7AD8 /* Exceptions for "Flickr" folder in "FlickrWatch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Services/HistoryStorage/HistoryItem.swift,
+				Services/HistoryStorage/HistoryStorage.swift,
+			);
+			target = F6BDF7D52D0C854C006E7AD8 /* FlickrWatch Watch App */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F615280E2C9AEC51007FEDA7 /* Flickr */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F6BDF7EA2D0C88D3006E7AD8 /* Exceptions for "Flickr" folder in "FlickrWatch Watch App" target */,
+			);
 			path = Flickr;
 			sourceTree = "<group>";
 		};
@@ -43,6 +80,11 @@
 				F614C2B82C9DCEB8008D1204 /* Exceptions for "FlickrTests" folder in "FlickrTests" target */,
 			);
 			path = FlickrTests;
+			sourceTree = "<group>";
+		};
+		F6BDF7D72D0C854C006E7AD8 /* FlickrWatch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "FlickrWatch Watch App";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -62,6 +104,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F6BDF7D32D0C854C006E7AD8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -70,6 +119,7 @@
 			children = (
 				F615280E2C9AEC51007FEDA7 /* Flickr */,
 				F615281F2C9AEC53007FEDA7 /* FlickrTests */,
+				F6BDF7D72D0C854C006E7AD8 /* FlickrWatch Watch App */,
 				F615280D2C9AEC51007FEDA7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -79,6 +129,7 @@
 			children = (
 				F615280C2C9AEC51007FEDA7 /* Flickr.app */,
 				F615281C2C9AEC53007FEDA7 /* FlickrTests.xctest */,
+				F6BDF7D62D0C854C006E7AD8 /* FlickrWatch Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -93,10 +144,12 @@
 				F61528082C9AEC51007FEDA7 /* Sources */,
 				F61528092C9AEC51007FEDA7 /* Frameworks */,
 				F615280A2C9AEC51007FEDA7 /* Resources */,
+				F6BDF7E42D0C854E006E7AD8 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F6BDF7E22D0C854E006E7AD8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				F615280E2C9AEC51007FEDA7 /* Flickr */,
@@ -131,6 +184,28 @@
 			productReference = F615281C2C9AEC53007FEDA7 /* FlickrTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		F6BDF7D52D0C854C006E7AD8 /* FlickrWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F6BDF7E72D0C854E006E7AD8 /* Build configuration list for PBXNativeTarget "FlickrWatch Watch App" */;
+			buildPhases = (
+				F6BDF7D22D0C854C006E7AD8 /* Sources */,
+				F6BDF7D32D0C854C006E7AD8 /* Frameworks */,
+				F6BDF7D42D0C854C006E7AD8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				F6BDF7D72D0C854C006E7AD8 /* FlickrWatch Watch App */,
+			);
+			name = "FlickrWatch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "FlickrWatch Watch App";
+			productReference = F6BDF7D62D0C854C006E7AD8 /* FlickrWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -138,7 +213,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					F615280B2C9AEC51007FEDA7 = {
@@ -147,6 +222,9 @@
 					F615281B2C9AEC53007FEDA7 = {
 						CreatedOnToolsVersion = 16.0;
 						TestTargetID = F615280B2C9AEC51007FEDA7;
+					};
+					F6BDF7D52D0C854C006E7AD8 = {
+						CreatedOnToolsVersion = 16.2;
 					};
 				};
 			};
@@ -166,6 +244,7 @@
 			targets = (
 				F615280B2C9AEC51007FEDA7 /* Flickr */,
 				F615281B2C9AEC53007FEDA7 /* FlickrTests */,
+				F6BDF7D52D0C854C006E7AD8 /* FlickrWatch Watch App */,
 			);
 		};
 /* End PBXProject section */
@@ -179,6 +258,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		F615281A2C9AEC53007FEDA7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F6BDF7D42D0C854C006E7AD8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -202,6 +288,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F6BDF7D22D0C854C006E7AD8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -209,6 +302,11 @@
 			isa = PBXTargetDependency;
 			target = F615280B2C9AEC51007FEDA7 /* Flickr */;
 			targetProxy = F615281D2C9AEC53007FEDA7 /* PBXContainerItemProxy */;
+		};
+		F6BDF7E22D0C854E006E7AD8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F6BDF7D52D0C854C006E7AD8 /* FlickrWatch Watch App */;
+			targetProxy = F6BDF7E12D0C854E006E7AD8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -432,6 +530,68 @@
 			};
 			name = Release;
 		};
+		F6BDF7E52D0C854E006E7AD8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"FlickrWatch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 3QS73BWYFX;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = FlickrWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = max.Flickr;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = max.Flickr.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.6;
+			};
+			name = Debug;
+		};
+		F6BDF7E62D0C854E006E7AD8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"FlickrWatch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 3QS73BWYFX;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = FlickrWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = max.Flickr;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = max.Flickr.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.6;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -458,6 +618,15 @@
 			buildConfigurations = (
 				F61528342C9AEC53007FEDA7 /* Debug */,
 				F61528352C9AEC53007FEDA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F6BDF7E72D0C854E006E7AD8 /* Build configuration list for PBXNativeTarget "FlickrWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F6BDF7E52D0C854E006E7AD8 /* Debug */,
+				F6BDF7E62D0C854E006E7AD8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
