@@ -15,6 +15,7 @@ extension FlickrApp {
         @Published private(set) var rootRouter = Router(parentRouter: nil, rootRoute: .init(screen: .main))
         @ServiceLocator(.singleton) private var campaignMediator: CampaignViewMediator
         @ServiceLocator(.singleton) private var purchaseService: PurchaseService
+        @ServiceLocator(.singleton) private var watchConnection: WatchConnectionService
         private var cancellables: Set<AnyCancellable> = []
         
         init(showOnboarding: Bool = true) {            
@@ -46,6 +47,8 @@ extension FlickrApp {
                     }
                 }
                 .store(in: &cancellables)
+            
+            watchConnection.activateSession()
         }
         
         // MARK: - Private

@@ -7,18 +7,25 @@
 
 import Foundation
 import Observation
+import WatchConnectivity
+import Combine
 
 extension HistoryView {
     @Observable
-    final class ViewModel {
+    final class ViewModel: NSObject {
         private(set) var items: [HistoryItem] = []
         private let storage = HistoryStorage()
-        
-        init() {
-            storage.clearAll()
-        }
+        private(set) var transfers = WCSession.default.outstandingUserInfoTransfers
+        private let watchService = FlickrWatchAppServices.watchConnectionService
+        private var cancellables: Set<AnyCancellable> = []
         
         func onCreated() {
+            loadHistory()
+            listenUserInfoFromIOS()
+        }
+        
+        func deleteItem(_ item: HistoryItem) {
+            storage.deleteItem(item)
             loadHistory()
         }
         
@@ -36,6 +43,25 @@ extension HistoryView {
         
         private func loadHistory() {
             items = storage.fetch()
+        }
+        
+        private func listenUserInfoFromIOS() {            
+            watchService.userInfoPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] userInfo in
+                    guard let self, let historyData = userInfo[WatchTransferKeys.history.rawValue] as? Data else {
+                        print("error: invalid history data: \(userInfo)")
+                        return
+                    }
+                    
+                    do {
+                        let history = try JSONDecoder().decode([HistoryItem].self, from: historyData)
+                        storage.store(history, syncWithCompanionApp: false)
+                        loadHistory()
+                    } catch {
+                        print("failed decoding history: \(error)")
+                    }
+                }.store(in: &cancellables)
         }
     }
 }

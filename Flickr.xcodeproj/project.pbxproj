@@ -60,6 +60,8 @@
 			membershipExceptions = (
 				Services/HistoryStorage/HistoryItem.swift,
 				Services/HistoryStorage/HistoryStorage.swift,
+				Services/Watch/WatchConnectionService.swift,
+				Services/Watch/WatchTransferKeys.swift,
 			);
 			target = F6BDF7D52D0C854C006E7AD8 /* FlickrWatch Watch App */;
 		};

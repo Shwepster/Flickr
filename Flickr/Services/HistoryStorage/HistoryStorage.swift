@@ -13,15 +13,29 @@ struct HistoryStorage {
     private let decoder: JSONDecoder = .init()
     private let encoder: JSONEncoder = .init()
     
-    func store(_ history: [HistoryItem]) {
+    func store(_ history: [HistoryItem], syncWithCompanionApp: Bool = true) {
         let limitedHistory = Array(history.prefix(Self.limit))
         
         do {
             let data = try encoder.encode(limitedHistory)
             UserDefaults.standard.set(data, forKey: Self.key)
+            if syncWithCompanionApp {
+                sendToCompanionApp(limitedHistory)
+            }
         } catch {
             print("Error encoding history: \(error)")
         }
+    }
+    
+    private func sendToCompanionApp(_ history: [HistoryItem]) {
+#if os(iOS)
+        @ServiceLocator(.singleton) var watchService: WatchConnectionService
+        watchService.sendHistory(history)
+#endif
+        
+#if os(watchOS)
+        FlickrWatchAppServices.watchConnectionService.sendHistory(history)
+#endif
     }
     
     func store(_ item: HistoryItem) {

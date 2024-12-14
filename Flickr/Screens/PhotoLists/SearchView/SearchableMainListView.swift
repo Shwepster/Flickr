@@ -28,6 +28,7 @@ struct SearchableMainListView: View {
         }
         .tint(.app.tint)
         .onAppear { viewModel.onAppear() }
+        .task { viewModel.onCreate() }
     }
     
     // MARK: - Subview

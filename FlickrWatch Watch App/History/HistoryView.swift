@@ -22,8 +22,13 @@ struct HistoryView: View {
                             .frame(maxWidth: .infinity)
                             .background(.fill)
                             .clipShape(.capsule)
+                            .contentShape(Capsule())
+                            .onLongPressGesture {
+                                viewModel.deleteItem(item)
+                            }
                     }
                     .transition(.move(edge: .bottom))
+                    .animation(.easeInOut, value: viewModel.items)
                 }
             }
             .background(Color.black)

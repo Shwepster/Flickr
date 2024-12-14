@@ -8,10 +8,17 @@
 import SwiftUI
 
 @main
-struct FlickrWatch_Watch_AppApp: App {    
+struct FlickrWatch_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
             HistoryView()
+                .task {
+                    FlickrWatchAppServices.watchConnectionService.activateSession()
+                }
         }
     }
+}
+
+enum FlickrWatchAppServices {
+    static let watchConnectionService = WatchConnectionService()
 }
