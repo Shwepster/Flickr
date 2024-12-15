@@ -28,6 +28,14 @@ enum ServiceContainer {
     
     // MARK: Resolve
     
+    static func forceResole<ServiceT: Sendable>(lifetime: ServiceType = .singleton) -> ServiceT {
+        do {
+            return try ServiceContainer.resolve(ServiceT.self, lifetime: lifetime)
+        } catch {
+            fatalError("Error: \(error) for type: \(String(describing: ServiceT.self))")
+        }
+    }
+    
     static func resolve<ServiceT: Sendable>(_ type: ServiceT.Type,
                                             lifetime: ServiceType) throws(ResolveError) -> ServiceT {
         let key = String(describing: type)
