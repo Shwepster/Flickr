@@ -15,7 +15,7 @@ extension FlickrApp {
         @Published private(set) var rootRouter = Router(parentRouter: nil, rootRoute: .init(screen: .main))
         private lazy var campaignMediator: CampaignViewMediator = ServiceContainer.forceResole()
         private lazy var purchaseService: PurchaseService = ServiceContainer.forceResole()
-        private var watchConnection: WatchConnectionService = ServiceContainer.forceResole()
+        private lazy var watchConnection: WatchConnectionService = ServiceContainer.forceResole()
         private var cancellables: Set<AnyCancellable> = []
         
         init(showOnboarding: Bool = true) {            

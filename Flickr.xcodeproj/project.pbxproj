@@ -25,6 +25,13 @@
 			remoteGlobalIDString = F6BDF7D52D0C854C006E7AD8;
 			remoteInfo = "FlickrWatch Watch App";
 		};
+		F6BF73752D0EF97E000FE000 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F61528042C9AEC51007FEDA7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F615280B2C9AEC51007FEDA7;
+			remoteInfo = Flickr;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +52,7 @@
 		F615280C2C9AEC51007FEDA7 /* Flickr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flickr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F615281C2C9AEC53007FEDA7 /* FlickrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlickrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6BDF7D62D0C854C006E7AD8 /* FlickrWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FlickrWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6BF736F2D0EF97E000FE000 /* FlickrUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlickrUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -89,6 +97,11 @@
 			path = "FlickrWatch Watch App";
 			sourceTree = "<group>";
 		};
+		F6BF73702D0EF97E000FE000 /* FlickrUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FlickrUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +126,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F6BF736C2D0EF97E000FE000 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -122,6 +142,7 @@
 				F615280E2C9AEC51007FEDA7 /* Flickr */,
 				F615281F2C9AEC53007FEDA7 /* FlickrTests */,
 				F6BDF7D72D0C854C006E7AD8 /* FlickrWatch Watch App */,
+				F6BF73702D0EF97E000FE000 /* FlickrUITests */,
 				F615280D2C9AEC51007FEDA7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -132,6 +153,7 @@
 				F615280C2C9AEC51007FEDA7 /* Flickr.app */,
 				F615281C2C9AEC53007FEDA7 /* FlickrTests.xctest */,
 				F6BDF7D62D0C854C006E7AD8 /* FlickrWatch Watch App.app */,
+				F6BF736F2D0EF97E000FE000 /* FlickrUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -208,6 +230,29 @@
 			productReference = F6BDF7D62D0C854C006E7AD8 /* FlickrWatch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F6BF736E2D0EF97E000FE000 /* FlickrUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F6BF73772D0EF97E000FE000 /* Build configuration list for PBXNativeTarget "FlickrUITests" */;
+			buildPhases = (
+				F6BF736B2D0EF97E000FE000 /* Sources */,
+				F6BF736C2D0EF97E000FE000 /* Frameworks */,
+				F6BF736D2D0EF97E000FE000 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F6BF73762D0EF97E000FE000 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				F6BF73702D0EF97E000FE000 /* FlickrUITests */,
+			);
+			name = FlickrUITests;
+			packageProductDependencies = (
+			);
+			productName = FlickrUITests;
+			productReference = F6BF736F2D0EF97E000FE000 /* FlickrUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -228,6 +273,10 @@
 					F6BDF7D52D0C854C006E7AD8 = {
 						CreatedOnToolsVersion = 16.2;
 					};
+					F6BF736E2D0EF97E000FE000 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = F615280B2C9AEC51007FEDA7;
+					};
 				};
 			};
 			buildConfigurationList = F61528072C9AEC51007FEDA7 /* Build configuration list for PBXProject "Flickr" */;
@@ -247,6 +296,7 @@
 				F615280B2C9AEC51007FEDA7 /* Flickr */,
 				F615281B2C9AEC53007FEDA7 /* FlickrTests */,
 				F6BDF7D52D0C854C006E7AD8 /* FlickrWatch Watch App */,
+				F6BF736E2D0EF97E000FE000 /* FlickrUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -267,6 +317,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		F6BDF7D42D0C854C006E7AD8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F6BF736D2D0EF97E000FE000 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -297,6 +354,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F6BF736B2D0EF97E000FE000 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -309,6 +373,11 @@
 			isa = PBXTargetDependency;
 			target = F6BDF7D52D0C854C006E7AD8 /* FlickrWatch Watch App */;
 			targetProxy = F6BDF7E12D0C854E006E7AD8 /* PBXContainerItemProxy */;
+		};
+		F6BF73762D0EF97E000FE000 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F615280B2C9AEC51007FEDA7 /* Flickr */;
+			targetProxy = F6BF73752D0EF97E000FE000 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -594,6 +663,50 @@
 			};
 			name = Release;
 		};
+		F6BF73782D0EF97E000FE000 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3QS73BWYFX;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = max.FlickrUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = Flickr;
+				XROS_DEPLOYMENT_TARGET = 2.2;
+			};
+			name = Debug;
+		};
+		F6BF73792D0EF97E000FE000 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3QS73BWYFX;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = max.FlickrUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = Flickr;
+				XROS_DEPLOYMENT_TARGET = 2.2;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -629,6 +742,15 @@
 			buildConfigurations = (
 				F6BDF7E52D0C854E006E7AD8 /* Debug */,
 				F6BDF7E62D0C854E006E7AD8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F6BF73772D0EF97E000FE000 /* Build configuration list for PBXNativeTarget "FlickrUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F6BF73782D0EF97E000FE000 /* Debug */,
+				F6BF73792D0EF97E000FE000 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
