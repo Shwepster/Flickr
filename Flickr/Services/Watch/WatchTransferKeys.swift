@@ -9,4 +9,5 @@ import Foundation
 
 enum WatchTransferKeys: String {
     case history
+    case file
 }

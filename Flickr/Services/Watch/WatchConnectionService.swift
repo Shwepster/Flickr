@@ -42,8 +42,44 @@ final class WatchConnectionService: NSObject, @unchecked Sendable {
             print(error.localizedDescription)
         }
     }
+    
+    func sendFile(url: URL) {
+        let session = WCSession.default
+        
+        guard session.activationState == .activated, session.isReachable else {
+            print("app not installed")
+            return
+        }
+        
+        guard let filePath = Bundle.main.path(
+            forResource: "Kuran Iglesias - Could I Have This Kiss Forever",
+            ofType: "mp3"
+        ) else {
+            print("MP3 file not found!")
+            return
+        }
+        let url = URL(filePath: filePath)
+        
+        Task.detached(priority: .high) {
+            // load file and send
+            let fileData = try? Data(contentsOf: url)
+            guard let fileData else { return }
+            do {
+                let message: [String: Any] = [WatchTransferKeys.file.rawValue: fileData]
+                session.sendMessage(message) { dict in
+                    print("reply: \(dict)")
+                } errorHandler: { error in
+                    print("reply error: \(error.localizedDescription)")
+                }
+                //            try session.transferFile(<#T##file: URL##URL#>, metadata: <#T##[String : Any]?#>)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
 }
 
+#if os(iOS)
 extension WatchConnectionService: WCSessionDelegate {
     func session(
         _ session: WCSession,
@@ -58,8 +94,11 @@ extension WatchConnectionService: WCSessionDelegate {
     func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
         userInfoPublisher.send(userInfo) // this is on background thread
     }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        print("Did receive message from watch: \(message)")
+    }
 
-#if os(iOS)
     func sessionDidBecomeInactive(_ session: WCSession) {
         print("watch session became inactive")
         watchState.send(session.activationState)
@@ -74,5 +113,27 @@ extension WatchConnectionService: WCSessionDelegate {
         print("watch state changed")
         watchState.send(session.activationState)
     }
-#endif
 }
+#endif
+
+#if os(watchOS)
+extension WatchConnectionService: WCSessionDelegate {
+    func session(
+        _ session: WCSession,
+        activationDidCompleteWith activationState: WCSessionActivationState,
+        error: (any Error)?
+    ) {
+        print("started watch session")
+        print(activationState)
+        print(error?.localizedDescription ?? "")
+    }
+    
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
+        userInfoPublisher.send(userInfo) // this is on background thread
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        print("Did receive message from iPhone: \(message)")
+    }
+}
+#endif
