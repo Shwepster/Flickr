@@ -13,8 +13,8 @@ extension FlickrApp {
     final class ViewModel: ObservableObject {
         @Published var navigation: NavigationType?
         @Published private(set) var rootRouter = Router(parentRouter: nil, rootRoute: .init(screen: .main))
-        @ServiceLocator(.singleton) private var campaignMediator: CampaignViewMediator
-        @ServiceLocator(.singleton) private var purchaseService: PurchaseService
+        private lazy var campaignMediator: CampaignViewMediator = ServiceContainer.forceResole()
+        private lazy var purchaseService: PurchaseService = ServiceContainer.forceResole()
         private var cancellables: Set<AnyCancellable> = []
         
         init(showOnboarding: Bool = true) {            
@@ -29,10 +29,11 @@ extension FlickrApp {
                 }
                 .store(in: &cancellables)
             
-            clearCache()
         }
         
         func onCreated() {
+            clearCache()
+
             campaignMediator.navigation
                 .sink { [weak self] navigation in
                     self?.navigation = navigation
@@ -51,8 +52,8 @@ extension FlickrApp {
         // MARK: - Private
         
         private func clearCache() {
-            @ServiceLocator var cacheService: ImageCacheService
-            Task(priority: .high) {
+            Task(priority: .low) {
+                @ServiceLocator var cacheService: ImageCacheService
                 await cacheService.clearCache()
             }
         }

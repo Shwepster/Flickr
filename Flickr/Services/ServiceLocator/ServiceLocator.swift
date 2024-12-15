@@ -12,11 +12,7 @@ struct ServiceLocator<ServiceT: Sendable> {
     private var service: ServiceT
     
     init(_ lifetime: ServiceContainer.ServiceType = .new) {
-        do {
-            service = try ServiceContainer.resolve(ServiceT.self, lifetime: lifetime)
-        } catch {
-            fatalError("Error: \(error) for type: \(String(describing: ServiceT.self))")
-        }
+        service = ServiceContainer.forceResole(lifetime: lifetime)
     }
     
     var wrappedValue: ServiceT {

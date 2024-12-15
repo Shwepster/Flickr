@@ -38,9 +38,10 @@ enum AppServicesRegistrator {
     
     private static func registerFlickrService() {
         ServiceContainer.register(FlickrService.self) {
-            guard let key = ProcessInfo.processInfo.environment["KEY"] else {
-                fatalError("Missing environment variable KEY for FlickrService.")
-            }
+            let key = "b7917a20194fc79dba8a380f76a12e0f"
+//            guard let key = ProcessInfo.processInfo.environment["KEY"] else {
+//                fatalError("Missing environment variable KEY for FlickrService.")
+//            }
             
             let service = FlickrServiceDefault(
                 httpClient: HTTPClient(),
