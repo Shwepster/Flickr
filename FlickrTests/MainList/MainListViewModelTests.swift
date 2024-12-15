@@ -61,7 +61,7 @@ final class MainListViewModelTests: XCTestCase {
         await viewModel.onSearch("cat")
         await viewModel.onPaginate()
         XCTAssertEqual(
-            viewModel.photoViewModels.map(\.photoId),
+            viewModel.photoViewModels.map(\.id),
             (PhotoDTO.mocks + PhotoDTO.mocks).map(\.id),
             "Must have loaded photos two times"
         )
@@ -92,7 +92,7 @@ final class MainListViewModelTests: XCTestCase {
                        "Refresh should transition to loading and then back to idle")
         
         XCTAssertEqual(
-            viewModel.photoViewModels.map(\.photoId),
+            viewModel.photoViewModels.map(\.id),
             newPhotos.map(\.id),
             "New photos must replace old ones"
         )
@@ -148,7 +148,7 @@ final class MainListViewModelTests: XCTestCase {
         paginationController.photos = [.mock2]
         await viewModel.onSearch(second)
         XCTAssertEqual(
-            viewModel.photoViewModels.map(\.photoId),
+            viewModel.photoViewModels.map(\.id),
             secondPhotosBatch.map(\.id),
             "Old photos must be replaced by new one photo"
         )

@@ -26,7 +26,9 @@ struct MainListView: View {
                 }
             }
             .task {
-                await viewModel.onCreate()
+                Task {
+                    await viewModel.onCreate()
+                }
             }
             .alert(isPresented: $viewModel.errorModel.isErrorPresented, error: viewModel.errorModel.errorMessage) {
                 Button("Retry") {
