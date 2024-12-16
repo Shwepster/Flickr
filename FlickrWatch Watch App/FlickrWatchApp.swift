@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct FlickrWatch_Watch_AppApp: App {
+    private let stateObserver = AppStateObserver()
+    
     var body: some Scene {
         WindowGroup {
             HistoryView()
@@ -21,4 +23,15 @@ struct FlickrWatch_Watch_AppApp: App {
 
 enum FlickrWatchAppServices {
     static let watchConnectionService = WatchConnectionService()
+}
+
+final class APIClient {
+    static let shared = APIClient()
+    private let session: URLSession
+    
+    private init(session: URLSession = .shared) {
+        self.session = session
+    }
+    
+    
 }

@@ -18,6 +18,7 @@ extension HistoryView {
         private(set) var transfers = WCSession.default.outstandingUserInfoTransfers
         private let watchService = FlickrWatchAppServices.watchConnectionService
         private var cancellables: Set<AnyCancellable> = []
+        private let client: HTTPClient = .init()
         
         func onCreated() {
             loadHistory()
@@ -43,6 +44,8 @@ extension HistoryView {
         
         func sendFile() {
             watchService.sendFile()
+            // Test
+//            client.sendRequest()
         }
         
         // MARK: - Private

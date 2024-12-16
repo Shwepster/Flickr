@@ -9,6 +9,10 @@ import Foundation
 import WatchConnectivity
 import Combine
 
+#if os(iOS)
+import BackgroundTasks
+#endif
+
 final class WatchConnectionService: NSObject, @unchecked Sendable {
     private(set) var watchState: CurrentValueSubject<WCSessionActivationState?, Never>
     private(set) var userInfoPublisher: PassthroughSubject<[String: Any], Never> = .init()
@@ -79,9 +83,22 @@ final class WatchConnectionService: NSObject, @unchecked Sendable {
             
             // Monitor the progress of the file transfer
             fileTransfer.progress.addObserver(self, forKeyPath: "fractionCompleted", options: .new, context: nil)
+         
+//            scheduleBackgroundTask()
         }
     }
     
+#if os(watchOS)
+//    func scheduleBackgroundTask() {
+//        let request = BGAppRefreshTaskRequest(identifier: "com.example.app.uploadTask")
+//        request.earliestBeginDate = Date(timeIntervalSinceNow: 10) // Schedule it to begin in 15 seconds
+//        do {
+//            try BGTaskScheduler.shared.submit(request)
+//        } catch {
+//            print("Failed to schedule background task: \(error)")
+//        }
+//    }
+#endif
     // to maintain file progress completion, since right now, after iOS 17.5 & WatchOS 10.5 update,
     // there is an issue in the File transfer where the callback session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: Error?) did not fire at all and the file transfer gets stuck.
     // therefore, this function is made to handle the error.
