@@ -67,10 +67,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Kuran Iglesias - Could I Have This Kiss Forever.mp3",
-				Services/HistoryStorage/HistoryItem.swift,
-				Services/HistoryStorage/HistoryStorage.swift,
-				Services/Watch/WatchConnectionService.swift,
-				Services/Watch/WatchTransferKeys.swift,
 			);
 			target = F6BDF7D52D0C854C006E7AD8 /* FlickrWatch Watch App */;
 		};
@@ -81,6 +77,16 @@
 				"Kuran Iglesias - Could I Have This Kiss Forever.mp3",
 			);
 			target = F615280B2C9AEC51007FEDA7 /* Flickr */;
+		};
+		F6BF7B852D0FAC85000FE000 /* Exceptions for "WatchOS+iOS" folder in "FlickrWatch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				HistoryStorage/HistoryItem.swift,
+				HistoryStorage/HistoryStorage.swift,
+				WatchConnectionService.swift,
+				WatchTransferKeys.swift,
+			);
+			target = F6BDF7D52D0C854C006E7AD8 /* FlickrWatch Watch App */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -110,6 +116,14 @@
 		F6BF73702D0EF97E000FE000 /* FlickrUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = FlickrUITests;
+			sourceTree = "<group>";
+		};
+		F6BF7B802D0FAC84000FE000 /* WatchOS+iOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F6BF7B852D0FAC85000FE000 /* Exceptions for "WatchOS+iOS" folder in "FlickrWatch Watch App" target */,
+			);
+			path = "WatchOS+iOS";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -149,9 +163,10 @@
 		F61528032C9AEC51007FEDA7 = {
 			isa = PBXGroup;
 			children = (
+				F6BF7B802D0FAC84000FE000 /* WatchOS+iOS */,
 				F615280E2C9AEC51007FEDA7 /* Flickr */,
-				F615281F2C9AEC53007FEDA7 /* FlickrTests */,
 				F6BDF7D72D0C854C006E7AD8 /* FlickrWatch Watch App */,
+				F615281F2C9AEC53007FEDA7 /* FlickrTests */,
 				F6BF73702D0EF97E000FE000 /* FlickrUITests */,
 				F615280D2C9AEC51007FEDA7 /* Products */,
 			);
@@ -187,6 +202,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				F615280E2C9AEC51007FEDA7 /* Flickr */,
+				F6BF7B802D0FAC84000FE000 /* WatchOS+iOS */,
 			);
 			name = Flickr;
 			packageProductDependencies = (
