@@ -30,6 +30,10 @@ struct HistoryView: View {
                     .transition(.move(edge: .bottom))
                     .animation(.easeInOut, value: viewModel.items)
                 }
+                
+                Button("Send File") {
+                    viewModel.sendFile()
+                }
             }
             .background(Color.black)
             .ignoresSafeArea(.all, edges: .bottom)
@@ -52,7 +56,6 @@ struct HistoryView: View {
                     viewModel.fillMockData()
                 }
             }
-            .buttonStyle(.automatic)
         }
         .padding(.top)
         .transition(.blurReplace)

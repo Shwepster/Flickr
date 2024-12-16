@@ -66,6 +66,7 @@
 		F6BDF7EA2D0C88D3006E7AD8 /* Exceptions for "Flickr" folder in "FlickrWatch Watch App" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"Kuran Iglesias - Could I Have This Kiss Forever.mp3",
 				Services/HistoryStorage/HistoryItem.swift,
 				Services/HistoryStorage/HistoryStorage.swift,
 				Services/Watch/WatchConnectionService.swift,
@@ -73,12 +74,21 @@
 			);
 			target = F6BDF7D52D0C854C006E7AD8 /* FlickrWatch Watch App */;
 		};
+		F6BF7B7B2D0F2F23000FE000 /* Exceptions for "Flickr" folder in "Flickr" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				"Kuran Iglesias - Could I Have This Kiss Forever.mp3",
+			);
+			target = F615280B2C9AEC51007FEDA7 /* Flickr */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F615280E2C9AEC51007FEDA7 /* Flickr */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				F6BF7B7B2D0F2F23000FE000 /* Exceptions for "Flickr" folder in "Flickr" target */,
 				F6BDF7EA2D0C88D3006E7AD8 /* Exceptions for "Flickr" folder in "FlickrWatch Watch App" target */,
 			);
 			path = Flickr;
@@ -514,6 +524,8 @@
 				DEVELOPMENT_TEAM = 3QS73BWYFX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Flickr/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -544,6 +556,8 @@
 				DEVELOPMENT_TEAM = 3QS73BWYFX;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Flickr/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

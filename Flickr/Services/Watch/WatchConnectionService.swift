@@ -43,43 +43,93 @@ final class WatchConnectionService: NSObject, @unchecked Sendable {
         }
     }
     
-    func sendFile(url: URL) {
+    func sendFile() {
         let session = WCSession.default
         
-        guard session.activationState == .activated, session.isReachable else {
-            print("app not installed")
+//        session.isReachable
+        guard session.activationState == .activated else {
+            print("session is not activated")
             return
         }
         
-        guard let filePath = Bundle.main.path(
-            forResource: "Kuran Iglesias - Could I Have This Kiss Forever",
-            ofType: "mp3"
-        ) else {
-            print("MP3 file not found!")
+        #if os(iOS)
+        guard session.isWatchAppInstalled else {
+            print( "watch app not installed")
             return
         }
-        let url = URL(filePath: filePath)
+        #endif
         
         Task.detached(priority: .high) {
-            // load file and send
-            let fileData = try? Data(contentsOf: url)
-            guard let fileData else { return }
-            do {
-                let message: [String: Any] = [WatchTransferKeys.file.rawValue: fileData]
-                session.sendMessage(message) { dict in
-                    print("reply: \(dict)")
-                } errorHandler: { error in
-                    print("reply error: \(error.localizedDescription)")
-                }
-                //            try session.transferFile(<#T##file: URL##URL#>, metadata: <#T##[String : Any]?#>)
-            } catch {
-                print(error.localizedDescription)
+            let url = self.copyFileToWritableLocation(
+                fileName: "Kuran Iglesias - Could I Have This Kiss Forever",
+                fileExtension: "mp3"
+            )
+            
+            guard let url else {
+                print( "could not copy file")
+                return
+            }
+            
+            let message: [String: Any] = [WatchTransferKeys.file.rawValue: url.lastPathComponent]
+            
+            // test normal url
+            let fileTransfer = session.transferFile(URL(fileURLWithPath: url.relativePath), metadata: message)
+            
+            print("File transfer initiated for: \(url.lastPathComponent)")
+            
+            // Monitor the progress of the file transfer
+            fileTransfer.progress.addObserver(self, forKeyPath: "fractionCompleted", options: .new, context: nil)
+        }
+    }
+    
+    // to maintain file progress completion, since right now, after iOS 17.5 & WatchOS 10.5 update,
+    // there is an issue in the File transfer where the callback session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: Error?) did not fire at all and the file transfer gets stuck.
+    // therefore, this function is made to handle the error.
+    // read more on https://forums.developer.apple.com/forums/thread/751623?page=2
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "fractionCompleted", let progress = object as? Progress {
+            print("Transfer progress: \(progress.fractionCompleted * 100)%")
+            
+            if progress.fractionCompleted == 1.0 {
+                // Transfer is complete
+                print("File transfer completed successfully.")
+                
+                // Remove observer to prevent memory leaks
+                progress.removeObserver(self, forKeyPath: "fractionCompleted")
             }
         }
     }
+    
+    private func copyFileToWritableLocation(fileName: String, fileExtension: String) -> URL? {
+        // Locate the file in the bundle
+        guard let bundleURL = Bundle.main.url(forResource: fileName, withExtension: fileExtension) else {
+            print("File \(fileName).\(fileExtension) not found in the bundle.")
+            return nil
+        }
+        
+        // Define the destination in the temporary directory
+        let tempDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        
+        // try this
+//        let tempDirectory = FileManager.default.temporaryDirectory
+        let destinationURL = tempDirectory.appendingPathComponent("\(fileName).\(fileExtension)")
+        
+        // Copy the file to the writable directory
+        do {
+            if FileManager.default.fileExists(atPath: destinationURL.path) {
+                try FileManager.default.removeItem(at: destinationURL)
+            }
+ 
+            try FileManager.default.copyItem(at: bundleURL, to: destinationURL)
+        } catch {
+            print("Error copying file: \(error)")
+            return nil
+        }
+        
+        return destinationURL
+    }
 }
 
-#if os(iOS)
 extension WatchConnectionService: WCSessionDelegate {
     func session(
         _ session: WCSession,
@@ -98,7 +148,29 @@ extension WatchConnectionService: WCSessionDelegate {
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         print("Did receive message from watch: \(message)")
     }
+    
+    func session(_ session: WCSession, didReceive file: WCSessionFile) {
+        print("Did receive file from watch: \(file)")
+        
+        
+        let destinationURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("watchsong.mp3")
+        print("Saving file to: \(destinationURL.path)")
+        
+        do {
+            try FileManager.default.moveItem(at: file.fileURL, to: destinationURL)
+            print("File moved successfully to: \(destinationURL.path)")
+        } catch {
+            print("Failed to save file: \(error.localizedDescription)")
+        }
+    }
 
+    func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: (any Error)?) {
+        print("file transfer finished")
+        print(error?.localizedDescription ?? "")
+        print(fileTransfer.file)
+    }
+    
+#if os(iOS)
     func sessionDidBecomeInactive(_ session: WCSession) {
         print("watch session became inactive")
         watchState.send(session.activationState)
@@ -113,27 +185,5 @@ extension WatchConnectionService: WCSessionDelegate {
         print("watch state changed")
         watchState.send(session.activationState)
     }
-}
 #endif
-
-#if os(watchOS)
-extension WatchConnectionService: WCSessionDelegate {
-    func session(
-        _ session: WCSession,
-        activationDidCompleteWith activationState: WCSessionActivationState,
-        error: (any Error)?
-    ) {
-        print("started watch session")
-        print(activationState)
-        print(error?.localizedDescription ?? "")
-    }
-    
-    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
-        userInfoPublisher.send(userInfo) // this is on background thread
-    }
-    
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        print("Did receive message from iPhone: \(message)")
-    }
 }
-#endif

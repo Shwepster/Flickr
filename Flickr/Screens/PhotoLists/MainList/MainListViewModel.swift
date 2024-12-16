@@ -15,6 +15,11 @@ extension MainListView {
             isPageView.toggle()
         }
         
+        func sendFile() {
+            @ServiceLocator(.singleton) var watchService: WatchConnectionService
+            watchService.sendFile()
+        }
+        
         override func createViewModels(from models: [PhotoModel]) -> [PhotoItemView.ViewModel] {
             models.map {
                 PhotoItemView.ViewModel(photo: $0) { [weak self] viewModel in

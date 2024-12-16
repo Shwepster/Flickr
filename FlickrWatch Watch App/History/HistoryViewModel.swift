@@ -41,6 +41,12 @@ extension HistoryView {
             loadHistory()
         }
         
+        func sendFile() {
+            watchService.sendFile()
+        }
+        
+        // MARK: - Private
+        
         private func loadHistory() {
             items = storage.fetch()
         }
