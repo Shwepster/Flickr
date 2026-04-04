@@ -22,10 +22,10 @@ class PhotoListViewModel: ObservableObject {
         perPage: AppSettings.photosPerPage
     )) {
         self.paginationController = paginationController
-    }
-    
-    func onCreate() async {
         setupBinding()
+    }
+
+    func onCreate() async {
         // manually send event to init with current photos
         await handlePhotoUpdateEvent(.replace(photoStorage.photos))
     }
@@ -87,6 +87,7 @@ class PhotoListViewModel: ObservableObject {
             } else {
                 await photoStorage.addPhotos(photos)
             }
+            await Task.yield()
             state = paginationController.isNextPageAvailable() ? .idle : .allPagesLoaded
         } catch {
             let metadata = ErrorMetadata(error: error)
