@@ -17,6 +17,7 @@ enum AppServicesRegistrator {
         registerImageCacheService()
         registerFlickrService()
         registerPhotoService()
+        registerWatchService()
     }
     
     static func unregisterAllServices() {
@@ -24,6 +25,10 @@ enum AppServicesRegistrator {
     }
     
     // MARK: - Individual registrations
+    private static func registerWatchService() {
+        ServiceContainer.register(WatchConnectionService.self, factory: WatchConnectionService())
+    }
+    
     private static func registerPhotoStorage() {
         ServiceContainer.register(PhotoStorage.self, factory: PhotoStorage())
     }

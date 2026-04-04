@@ -14,6 +14,12 @@ struct MainListView: View {
         content
             .toolbar {
                 Button {
+                    viewModel.sendFile()
+                } label: {
+                    Image(systemName: "paperplane.fill")
+                }
+                
+                Button {
                     withAnimation(.easeInOut) {
                         viewModel.toggleViewType()
                     }

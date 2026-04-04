@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 extension SearchableMainListView {
     @MainActor
@@ -14,7 +15,13 @@ extension SearchableMainListView {
         @Published var history: [HistoryItem] = []
         @ServiceLocator private var storage: HistoryStorage
         @ServiceLocator(.singleton) private var logger: FlickrLogger
+        @ServiceLocator(.singleton) private var watchConnection: WatchConnectionService
         let listViewModel = MainListView.ViewModel()
+        private var cancellables: Set<AnyCancellable> = []
+        
+        func onCreate() {
+            listenInfoFromWatch()
+        }
         
         func onAppear() {
             syncHistory()
@@ -46,6 +53,25 @@ extension SearchableMainListView {
         
         private func syncHistory() {
             history = storage.fetch()
+        }
+        
+        private func listenInfoFromWatch() {
+            watchConnection.userInfoPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] userInfo in
+                    guard let self, let historyData = userInfo[WatchTransferKeys.history.rawValue] as? Data else {
+                        print("error: invalid history data: \(userInfo)")
+                        return
+                    }
+                    
+                    do {
+                        let history = try JSONDecoder().decode([HistoryItem].self, from: historyData)
+                        storage.store(history, syncWithCompanionApp: false)
+                        syncHistory()
+                    } catch {
+                        print("failed decoding history: \(error)")
+                    }
+                }.store(in: &cancellables)
         }
     }
 }
