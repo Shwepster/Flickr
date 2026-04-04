@@ -10,7 +10,8 @@ import SwiftUI
 struct SearchableMainListView: View {
     @StateObject private var viewModel = SearchViewModel()
     @FocusState private var isFocused: Bool
-    
+    @State private var isInfoPresented = false
+
     var body: some View {
         NavigationStack {
             MainListView(viewModel: viewModel.listViewModel)
@@ -31,10 +32,35 @@ struct SearchableMainListView: View {
         .tint(.app.tint)
         .onAppear { viewModel.onAppear() }
         .task { viewModel.onCreate() }
+        .overlay(alignment: .bottomTrailing) {
+            if !isFocused {
+                infoButton
+            }
+        }
+        .sheet(isPresented: $isInfoPresented) {
+            InfoView()
+        }
     }
     
-    // MARK: - Subview
-    
+    // MARK: - Subviews
+
+    @ViewBuilder
+    private var infoButton: some View {
+        Button {
+            isInfoPresented = true
+        } label: {
+            Image(systemName: "info.circle.fill")
+                .font(.title2)
+                .foregroundStyle(AppStyle.tint)
+                .padding(10)
+                .background(AppStyle.barBackground.opacity(0.9))
+                .clipShape(Circle())
+        }
+        .padding(.trailing)
+        .padding(.bottom, 8)
+        .safeAreaPadding(.bottom)
+    }
+
     @ViewBuilder
     private var suggestionsView: some View {
         VStack {
