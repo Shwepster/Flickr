@@ -80,8 +80,9 @@ extension PhotoItemView {
         
         private func loadImage() async {
             var photo = _photo.withLock { $0 }
+            let photoDTO = photo.photo
             let imageTask = Task.detached { [photoSize, photoService] in
-                await photoService.loadImage(for: photo.photo, size: photoSize)
+                await photoService.loadImage(for: photoDTO, size: photoSize)
             }
             
             if let uiImage = await imageTask.value {
@@ -100,7 +101,7 @@ extension PhotoItemView {
 
 // MARK: - Protocols
 extension PhotoItemView.ViewModel: Identifiable {
-    nonisolated var id: String { photo.iterationId }
+    nonisolated var id: String { photo.photo.id }
 }
 
 extension PhotoItemView.ViewModel: Equatable {
