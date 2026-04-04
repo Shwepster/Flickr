@@ -8,7 +8,7 @@
 import Foundation
 
 @testable import Flickr
-final class FlickrSearchPaginationControllerMock {
+final class FlickrSearchPaginationControllerMock: @unchecked Sendable {
     // mock
     var photos: [Flickr.PhotoDTO] = []
     var isNextPage: Bool = true

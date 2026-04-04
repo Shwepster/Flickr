@@ -77,7 +77,7 @@ class PhotoListViewModel: ObservableObject {
         state = .loading
         
         do {
-            let photosDTO = try await Task { [paginationController] in
+            let photosDTO = try await Task.detached(priority: .high) { [paginationController] in
                 try await paginationController.loadNextPage()
             }.value
             
