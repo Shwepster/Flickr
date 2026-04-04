@@ -12,7 +12,7 @@ struct SearchableMainListView: View {
     @FocusState private var isFocused: Bool
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             MainListView(viewModel: viewModel.listViewModel)
                 .searchable(text: $viewModel.searchText, prompt: "Search for photos")
                 .searchFocused($isFocused)
