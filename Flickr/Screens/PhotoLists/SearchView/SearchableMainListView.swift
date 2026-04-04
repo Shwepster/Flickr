@@ -18,6 +18,8 @@ struct SearchableMainListView: View {
                 .searchFocused($isFocused)
                 .onSubmit(of: .search) { search() }
                 .navigationTitle("Flickr")
+                .toolbarBackground(Color.app.barBackground, for: .navigationBar)
+                .toolbarColorScheme(.dark, for: .navigationBar)
                 .overlay {
                     if isFocused {
                         suggestionsView
