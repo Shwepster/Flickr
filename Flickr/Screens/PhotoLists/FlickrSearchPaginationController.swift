@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol FlickrSearchPaginationController {
+protocol FlickrSearchPaginationController: Sendable {
     var page: Int { get }
     var searchTerm: String { get }
     
@@ -17,7 +17,7 @@ protocol FlickrSearchPaginationController {
     func resetWithNewSearchTerm(_ searchTerm: String)
 }
 
-final class FlickrSearchPaginationControllerDefault: FlickrSearchPaginationController {
+final class FlickrSearchPaginationControllerDefault: FlickrSearchPaginationController, @unchecked Sendable {
     @ServiceLocator private var flickrService: FlickrService
     private let perPage: Int
     private var totalPages: Int?
