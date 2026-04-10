@@ -27,3 +27,7 @@ Packages/
 # CocoaPods
 Pods/
 Podfile.lock
+
+# Claude Code — local user settings
+.claude/settings.local.json
+.claude/worktrees/
