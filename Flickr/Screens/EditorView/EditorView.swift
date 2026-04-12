@@ -39,6 +39,7 @@ struct EditorView: View {
                     .padding(8)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
+            .accessibilityIdentifier(A11y.Editor.image)
     }
     
     @ViewBuilder
@@ -52,15 +53,18 @@ struct EditorView: View {
         }
         .buttonStyle(.bordered)
         .controlSize(.mini)
+        .accessibilityIdentifier(A11y.Editor.save)
     }
     
     @ViewBuilder
     private var slider: some View {
         HStack {
             Slider(value: $viewModel.hueRotation, in: viewModel.angleRange)
+                .accessibilityIdentifier(A11y.Editor.slider)
             Text(viewModel.hueRotation.rounded().formatted())
                 .monospaced()
                 .frame(width: 40, alignment: .center)
+                .accessibilityIdentifier(A11y.Editor.angleValue)
         }
     }
 }

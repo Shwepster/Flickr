@@ -18,7 +18,8 @@ struct MainListView: View {
                 } label: {
                     Image(systemName: "paperplane.fill")
                 }
-                
+                .accessibilityIdentifier(A11y.Main.toolbarSend)
+
                 Button {
                     withAnimation(.easeInOut) {
                         viewModel.toggleViewType()
@@ -30,6 +31,7 @@ struct MainListView: View {
                         : "square.split.1x2.fill"
                     )
                 }
+                .accessibilityIdentifier(A11y.Main.toolbarToggleView)
             }
             .task {
                 Task {

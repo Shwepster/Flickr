@@ -20,9 +20,10 @@ struct PhotoItemView: View {
                 loadingView
                     .zIndex(2) // avoid using 0 index, it messes up animations
             }
-            
+
             topBar.zIndex(3)
         }
+        .accessibilityIdentifier(A11y.PhotoList.item(viewModel.id))
         .clipShape(.rect(cornerRadius: 8))
         .animation(.easeInOut.speed(2), value: viewModel.image)
         .transition(.opacity)
@@ -38,7 +39,7 @@ struct PhotoItemView: View {
         VStack {
             HStack {
                 Spacer()
-                
+
                 Button {
                     viewModel.onDelete()
                 } label: {
@@ -47,8 +48,9 @@ struct PhotoItemView: View {
                 }
                 .buttonStyle(.borderless)
                 .tint(.app.tint)
+                .accessibilityIdentifier(A11y.PhotoList.deleteButton(viewModel.id))
             }
-            
+
             Spacer()
         }
     }

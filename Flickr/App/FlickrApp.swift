@@ -13,13 +13,16 @@ struct FlickrApp: App {
     
     init() {
         AppServicesRegistrator.registerAllServices()
+        #if DEBUG
+        UITestingSupport.applyIfNeeded()
+        #endif
         configureNavigationBarAppearance()
     }
     
     var body: some Scene {
         WindowGroup {
             ZStack {
-                Color.clear
+                Color.yellow
                 viewModel.rootRouter.rootRoute.screen
             }
             .bindToNavigation(viewModel.$navigation)

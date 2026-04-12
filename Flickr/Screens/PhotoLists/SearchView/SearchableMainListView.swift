@@ -14,6 +14,7 @@ struct SearchableMainListView: View {
     var body: some View {
         NavigationStack {
             MainListView(viewModel: viewModel.listViewModel)
+                .accessibilityIdentifier(A11y.Main.navTitle)
                 .searchable(text: $viewModel.searchText, prompt: "Search for photos")
                 .searchFocused($isFocused)
                 .onSubmit(of: .search) { search() }
@@ -47,7 +48,8 @@ struct SearchableMainListView: View {
                     }
                 }
                 .padding()
-                
+                .accessibilityIdentifier(A11y.Search.historyList)
+
                 clearHistoryButton
             }
             
@@ -70,6 +72,7 @@ struct SearchableMainListView: View {
                 .frame(maxWidth: .infinity)
                 .background(.app.secondaryBackground)
         }
+        .accessibilityIdentifier(A11y.Search.historyClear)
     }
     
     @ViewBuilder
@@ -79,6 +82,7 @@ struct SearchableMainListView: View {
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity)
             .padding()
+            .accessibilityIdentifier(A11y.Search.historyEmpty)
     }
     
     @ViewBuilder
@@ -87,17 +91,19 @@ struct SearchableMainListView: View {
             Text(item.text)
                 .font(.title2)
                 .foregroundStyle(.secondary)
-            
+
             Spacer()
-            
+
             Button {
                 viewModel.deleteItem(item)
             } label: {
                 Image(systemName: "trash")
             }
+            .accessibilityIdentifier(A11y.Search.historyDelete(item.text))
         }
         .padding(6)
         .contentShape(Rectangle())
+        .accessibilityIdentifier(A11y.Search.historyItem(item.text))
         .onTapGesture {
             viewModel.searchText = item.text
             search()

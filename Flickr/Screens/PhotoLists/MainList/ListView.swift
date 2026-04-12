@@ -21,12 +21,13 @@ struct ListView: View {
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.app.background)
-            
+
             loadingItem
                 .frame(maxWidth: .infinity)
                 .listRowBackground(Color.app.background)
                 .listRowSeparator(.hidden)
         }
+        .accessibilityIdentifier(A11y.PhotoList.list)
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(.app.backgroundGradient)
@@ -64,6 +65,7 @@ struct ListView: View {
             .scaleEffect(1.5)
             .progressViewStyle(CircularProgressViewStyle())
             .id(UUID())
+            .accessibilityIdentifier(A11y.PhotoList.loading)
     }
     
     @ViewBuilder
@@ -80,6 +82,7 @@ struct ListView: View {
         .frame(maxWidth: .infinity)
         .frame(height: photoViewModels.isEmpty ? UIScreen.main.bounds.height : 100)
         .contentShape(Rectangle())
+        .accessibilityIdentifier(A11y.PhotoList.error)
         .onTapGesture {
             Task {
                 await onRefresh()

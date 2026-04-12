@@ -22,6 +22,7 @@ struct PageView: View {
                 }
                 .scrollTargetLayout()
             }
+            .accessibilityIdentifier(A11y.PageView.scroll)
             .contentMargins(20)
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.viewAligned)
@@ -48,6 +49,7 @@ struct PageView: View {
             .foregroundStyle(.white)
             .contentShape(Rectangle())
             .clipShape(RoundedRectangle(cornerRadius: 20))
+            .accessibilityIdentifier(A11y.PageView.page(photo.id))
             .scrollTransition(axis: .horizontal) { effect, phase in
                 effect.scaleEffect(phase.isIdentity ? 1 : 0.95)
             }
