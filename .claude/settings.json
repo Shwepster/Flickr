@@ -27,7 +27,10 @@
       "Bash(git rev-parse:*)",
       "Bash(git ls-files:*)",
       "Bash(git config --get:*)",
-      "Bash(git config --list)"
+      "Bash(git config --list)",
+      "Bash(xcodebuild:*)",
+      "Bash(swift:*)",
+      "Bash(xcode-select:*)"
     ],
     "ask": [
       "Bash(git push:*)",
