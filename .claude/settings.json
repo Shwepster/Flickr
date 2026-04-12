@@ -91,7 +91,6 @@
       "Bash(dd:*)",
       "Bash(chmod -R 777:*)",
       "Bash(chown -R:*)",
-      "Bash(:(){ :|:& };:)",
       "Bash(> /dev/sda)",
       "Bash(mv / /dev/null)",
       "Bash(find . -delete)",
