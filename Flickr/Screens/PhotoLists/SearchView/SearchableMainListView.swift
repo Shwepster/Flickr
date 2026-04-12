@@ -1,0 +1,131 @@
+//
+//  SearchableMainListView.swift
+//  Flickr
+//
+//  Created by Maxim Vynnyk on 30.09.2024.
+//
+
+import SwiftUI
+
+struct SearchableMainListView: View {
+    @StateObject private var viewModel = SearchViewModel()
+    @FocusState private var isFocused: Bool
+    
+    var body: some View {
+        NavigationStack {
+            MainListView(viewModel: viewModel.listViewModel)
+                .accessibilityIdentifier(A11y.Main.navTitle)
+                .searchable(text: $viewModel.searchText, prompt: "Search for photos")
+                .searchFocused($isFocused)
+                .onSubmit(of: .search) { search() }
+                .navigationTitle("Flickr")
+                .toolbarBackground(Color.app.barBackground, for: .navigationBar)
+                .toolbarColorScheme(.dark, for: .navigationBar)
+                .overlay {
+                    if isFocused {
+                        suggestionsView
+                    }
+                }
+                .animation(.easeInOut.speed(2), value: isFocused)
+                .background(.app.backgroundGradient)
+        }
+        .tint(.app.tint)
+        .onAppear { viewModel.onAppear() }
+        .task { viewModel.onCreate() }
+    }
+    
+    // MARK: - Subview
+    
+    @ViewBuilder
+    private var suggestionsView: some View {
+        VStack {
+            if viewModel.history.isEmpty {
+                emptyHistoryView
+            } else {
+                VStack {
+                    ForEach(viewModel.history, id: \.id) { item in
+                        historyView(item)
+                    }
+                }
+                .padding()
+                .accessibilityIdentifier(A11y.Search.historyList)
+
+                clearHistoryButton
+            }
+            
+            Spacer()
+        }
+        .background(.app.background)
+        .animation(.easeInOut, value: viewModel.history)
+        .onTapGesture {
+            cancelFocus()
+        }
+    }
+    
+    @ViewBuilder
+    private var clearHistoryButton: some View {
+        Button {
+            viewModel.clearHistory()
+        } label: {
+            Text("Clear history")
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.app.secondaryBackground)
+        }
+        .accessibilityIdentifier(A11y.Search.historyClear)
+    }
+    
+    @ViewBuilder
+    private var emptyHistoryView: some View {
+        Text("No history yet")
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity)
+            .padding()
+            .accessibilityIdentifier(A11y.Search.historyEmpty)
+    }
+    
+    @ViewBuilder
+    private func historyView(_ item: HistoryItem) -> some View {
+        HStack {
+            Text(item.text)
+                .font(.title2)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            Button {
+                viewModel.deleteItem(item)
+            } label: {
+                Image(systemName: "trash")
+            }
+            .accessibilityIdentifier(A11y.Search.historyDelete(item.text))
+        }
+        .padding(6)
+        .contentShape(Rectangle())
+        .accessibilityIdentifier(A11y.Search.historyItem(item.text))
+        .onTapGesture {
+            viewModel.searchText = item.text
+            search()
+        }
+    }
+    
+    // MARK: - Helpers
+    
+    private func search() {
+        viewModel.search()
+        cancelFocus()
+    }
+    
+    private func cancelFocus() {
+        isFocused = false
+        
+        if isFocused {
+            isFocused = false
+        }
+    }
+}
+
+#Preview {
+    SearchableMainListView()
+}
