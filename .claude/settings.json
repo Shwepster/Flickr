@@ -28,7 +28,10 @@
       "Bash(git ls-files:*)",
       "Bash(git config --get:*)",
       "Bash(git config --list)",
+      "Bash(cd:*)",
       "Bash(xcodebuild:*)",
+      "Bash(xcodebuild build:*)",
+      "Bash(xcodebuild test:*)",
       "Bash(swift:*)",
       "Bash(xcode-select:*)"
     ],
@@ -115,6 +118,17 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/block-destructive.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CC_EDITED_FILES\" | grep -qE '\\.swift$'; then xcodebuild build -scheme Flickr -destination 'platform=iOS Simulator,name=iPhone 16' 2>&1 | tail -5; fi"
           }
         ]
       }
